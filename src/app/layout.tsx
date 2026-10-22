@@ -14,10 +14,40 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hellomusic-alpha.vercel.app"),
   title: "Hello Music — Music Beyond Imagination",
-  description: "Underrated songs only. Listen to ZION, explore Kant & Nietzsche, Einstein & Sagan, and soar beyond imagination.",
+  description: "Experience ZION's original track 'Fly away' with 30s mindful flight, celestial horizons, and timeless reflections from Kant, Nietzsche, Einstein & Sagan.",
+  keywords: [
+    "Hello Music",
+    "ZION",
+    "Fly away",
+    "Underrated Music",
+    "Meditation",
+    "Cosmos",
+    "Philosophy",
+    "Immanuel Kant",
+    "Friedrich Nietzsche",
+    "Albert Einstein",
+    "Carl Sagan",
+  ],
+  authors: [{ name: "ZION" }],
+  openGraph: {
+    title: "Hello Music — Music Beyond Imagination",
+    description: "Experience ZION's original track 'Fly away' with 30s mindful flight, celestial horizons, and timeless reflections from Kant, Nietzsche, Einstein & Sagan.",
+    url: "https://hellomusic-alpha.vercel.app",
+    siteName: "Hello Music",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hello Music — Music Beyond Imagination",
+    description: "Experience ZION's original track 'Fly away' with 30s mindful flight, celestial horizons, and timeless reflections from Kant, Nietzsche, Einstein & Sagan.",
+    creator: "@zion",
+  },
   icons: {
     icon: "/covers/fly-away.svg",
+    apple: "/covers/fly-away.svg",
   },
   appleWebApp: {
     capable: true,

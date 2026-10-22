@@ -203,23 +203,27 @@ function MusicAppContent() {
           } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3 sm:p-6 pb-36 md:pb-8 relative border border-zinc-900/60 shadow-xl touch-scroll`}
         >
           {/* Category Chips Bar */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6 sticky -top-3 sm:-top-6 pt-1 sm:pt-2 pb-2 bg-[#121212]/95 backdrop-blur-md z-10 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 mb-4 sm:mb-6 sticky top-0 pt-2 pb-3 bg-[#121212]/95 backdrop-blur-md z-10 overflow-x-auto no-scrollbar">
             {categoryPills.map((pill) => {
               const isActive =
-                (pill === "All" && selectedGenre === "All") ||
-                (pill !== "All" && selectedGenre.toLowerCase().includes(pill.toLowerCase()));
+                (pill === "All" && (selectedGenre === "All" || !selectedGenre)) ||
+                (pill === "Escape to Cosmos" && selectedGenre.toLowerCase().includes("cosmos")) ||
+                (pill === "Original" && selectedGenre.toLowerCase().includes("original"));
               return (
                 <button
                   type="button"
                   key={pill}
                   onClick={() => {
-                    if (pill === "All") setSelectedGenre("All");
-                    else setSelectedGenre(pill);
+                    setActiveNav("home");
+                    setSelectedGenre(pill);
+                    if (pill === "Escape to Cosmos") {
+                      setActiveImaginationId("meditation");
+                    }
                   }}
-                  className={`px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition active:scale-95 ${
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 active:scale-95 ${
                     isActive
-                      ? "bg-white text-black font-bold"
-                      : "bg-[#242424] text-white hover:bg-[#2a2a2a]"
+                      ? "bg-white text-black font-bold shadow-md ring-1 ring-white"
+                      : "bg-[#242424] text-zinc-300 hover:text-white hover:bg-[#2e2e2e] border border-white/5"
                   }`}
                 >
                   {pill}
@@ -261,10 +265,12 @@ function MusicAppContent() {
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg sm:text-2xl font-bold text-white tracking-tight">
-                    Escape to Cosmos
+                    {selectedGenre === "Original"
+                      ? "Original Track"
+                      : "Escape to Cosmos"}
                   </h2>
                   <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                    ZION
+                    {selectedGenre === "Original" ? "ORIGINAL MASTER" : "ZION"}
                   </span>
                 </div>
               </div>

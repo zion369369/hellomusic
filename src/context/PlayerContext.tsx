@@ -462,10 +462,22 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
     // 2. Genre filter
     if (selectedGenre !== "All") {
-      if (
-        !song.genre?.toLowerCase().includes(selectedGenre.toLowerCase()) &&
-        !song.title.toLowerCase().includes(selectedGenre.toLowerCase())
-      ) {
+      const g = selectedGenre.toLowerCase();
+      const matchGenre = song.genre?.toLowerCase().includes(g);
+      const matchTitle = song.title.toLowerCase().includes(g);
+      const matchOriginal =
+        g === "original" &&
+        (song.id === "fly-away-zion" ||
+          song.artist.toLowerCase() === "zion" ||
+          song.genre?.toLowerCase().includes("original") ||
+          song.description?.toLowerCase().includes("original"));
+      const matchCosmos =
+        (g.includes("escape") || g.includes("cosmos")) &&
+        (song.id === "fly-away-zion" ||
+          song.genre?.toLowerCase().includes("cosmos") ||
+          song.genre?.toLowerCase().includes("escape"));
+
+      if (!matchGenre && !matchTitle && !matchOriginal && !matchCosmos) {
         return false;
       }
     }

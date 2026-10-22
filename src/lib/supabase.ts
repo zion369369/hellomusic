@@ -70,14 +70,17 @@ function getLocalSongs(): Song[] {
   }
   try {
     const parsed: Song[] = JSON.parse(stored);
-    // Ensure "Fly away" is always present
-    const hasFlyAway = parsed.some((s) => s.id === "fly-away-zion" || s.title.toLowerCase() === "fly away");
-    if (!hasFlyAway) {
+    // Ensure "Fly away" is always present and updated
+    const index = parsed.findIndex((s) => s.id === "fly-away-zion" || s.title.toLowerCase() === "fly away");
+    if (index === -1) {
       const merged = [INITIAL_SONGS[0], ...parsed];
       localStorage.setItem(LOCAL_STORAGE_SONGS_KEY, JSON.stringify(merged));
       return merged;
+    } else {
+      parsed[index] = { ...parsed[index], genre: INITIAL_SONGS[0].genre };
+      localStorage.setItem(LOCAL_STORAGE_SONGS_KEY, JSON.stringify(parsed));
+      return parsed;
     }
-    return parsed;
   } catch {
     return INITIAL_SONGS;
   }

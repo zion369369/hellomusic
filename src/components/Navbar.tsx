@@ -9,6 +9,7 @@ import {
   X,
   User,
   LogOut,
+  Music,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -24,16 +25,16 @@ export default function Navbar() {
 
   return (
     <header className="h-14 sm:h-16 px-3 sm:px-5 flex items-center justify-between select-none bg-black border-b border-zinc-900/60 flex-shrink-0 z-30">
-      {/* BRAND LOGO */}
+      {/* BRAND LOGO: Black and White Music Sign */}
       <div
         onClick={() => {
           setSearchQuery("");
           setActiveNav("home");
         }}
-        className="flex items-center gap-2 cursor-pointer group"
+        className="flex items-center gap-2.5 cursor-pointer group"
       >
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-white to-zinc-400 flex items-center justify-center shadow-md">
-          <span className="text-black font-black text-xs">H</span>
+        <div className="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0">
+          <Music className="w-4 h-4 text-black fill-black stroke-[2.2] translate-x-[0.5px]" />
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-xs sm:text-sm font-black tracking-wider text-white">
