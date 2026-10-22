@@ -87,10 +87,10 @@ export default function PlayerBottomBar() {
           </div>
 
           {/* Quick controls */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={() => toggleLike(currentSong.id)}
-              className="text-[#b3b3b3] hover:text-white p-1.5 transition"
+              className="text-[#b3b3b3] hover:text-white p-2.5 min-w-[40px] min-h-[40px] flex items-center justify-center transition active:scale-90"
               title={currentSong.is_liked ? "Unlike" : "Like"}
             >
               <Heart
@@ -102,7 +102,7 @@ export default function PlayerBottomBar() {
 
             <button
               onClick={togglePlay}
-              className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow hover:scale-105 active:scale-95 transition"
+              className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full bg-white text-black flex items-center justify-center shadow active:scale-90 transition-transform"
               title={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? (

@@ -11,7 +11,7 @@ import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
 import AuthModal from "@/components/AuthModal";
-import { Music, Disc3, Heart, Home as HomeIcon, Library } from "lucide-react";
+import { Music, Disc3, Heart, Home as HomeIcon, Library, MessageSquare } from "lucide-react";
 
 function MusicAppContent() {
   const {
@@ -24,15 +24,26 @@ function MusicAppContent() {
     setSelectedGenre,
     setIsPublishModalOpen,
     isLoadingSongs,
+    setActiveImaginationId,
   } = usePlayer();
 
-  const [mobileTab, setMobileTab] = useState<"home" | "library">("home");
+  const [mobileTab, setMobileTab] = useState<"cosmos" | "imagination" | "library">("cosmos");
 
   const categoryPills = ["All", "Escape to Cosmos", "Original"];
   const flyAwaySong = songs[0];
 
+  const handleMobileTabSwitch = (tab: "cosmos" | "imagination" | "library") => {
+    setMobileTab(tab);
+    if (tab === "cosmos") {
+      setActiveNav("home");
+    } else if (tab === "imagination") {
+      setActiveNav("home");
+      setActiveImaginationId("imagination");
+    }
+  };
+
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-black text-white font-sans select-none">
+    <div className="flex flex-col h-[100dvh] w-full max-w-full overflow-hidden bg-black text-white font-sans select-none">
       {/* 1. TOP WINDOW BAR */}
       <Navbar />
 
@@ -45,20 +56,20 @@ function MusicAppContent() {
         {mobileTab === "library" && (
           <div className="flex md:hidden flex-1 w-full h-full min-h-0">
             <Sidebar
-              onMobileItemClick={() => setMobileTab("home")}
+              onMobileItemClick={() => setMobileTab("cosmos")}
               className="w-full h-full flex-1"
             />
           </div>
         )}
 
-        {/* MAIN CANVAS (Visible on desktop OR when mobileTab === 'home') */}
+        {/* MAIN CANVAS (Visible on desktop OR when mobileTab === 'cosmos' or 'imagination') */}
         <main
           className={`${
-            mobileTab === "home" ? "flex" : "hidden md:flex"
-          } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3.5 sm:p-6 relative border border-zinc-900/60 shadow-xl`}
+            mobileTab !== "library" ? "flex" : "hidden md:flex"
+          } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3 sm:p-6 pb-36 md:pb-8 relative border border-zinc-900/60 shadow-xl touch-scroll`}
         >
           {/* Category Chips Bar */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6 sticky -top-3.5 sm:-top-6 pt-1.5 sm:pt-2 pb-2 bg-[#121212]/95 backdrop-blur-md z-10 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 mb-4 sm:mb-6 sticky -top-3 sm:-top-6 pt-1 sm:pt-2 pb-2 bg-[#121212]/95 backdrop-blur-md z-10 overflow-x-auto no-scrollbar">
             {categoryPills.map((pill) => {
               const isActive =
                 (pill === "All" && selectedGenre === "All") ||
@@ -70,7 +81,7 @@ function MusicAppContent() {
                     if (pill === "All") setSelectedGenre("All");
                     else setSelectedGenre(pill);
                   }}
-                  className={`px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+                  className={`px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition active:scale-95 ${
                     isActive
                       ? "bg-white text-black font-bold"
                       : "bg-[#242424] text-white hover:bg-[#2a2a2a]"
@@ -130,7 +141,7 @@ function MusicAppContent() {
                   <SongCard song={flyAwaySong} />
                 </div>
 
-                {/* RIGHT SIDE OF THE SONG: Deep Aesthetic Cosmos Quotes (Kant/Nietzsche & Einstein/Sagan) */}
+                {/* RIGHT SIDE OF THE SONG: Deep Aesthetic Cosmos Quotes & 30s Meditation */}
                 <div className="lg:col-span-7 flex flex-col justify-stretch">
                   <CosmosAestheticPanel />
                 </div>
@@ -183,15 +194,12 @@ function MusicAppContent() {
       {/* 3. PERSISTENT SPOTIFY BOTTOM PLAYER BAR (Mobile Mini-Player + Desktop Full Dock) */}
       <PlayerBottomBar />
 
-      {/* 4. MOBILE BOTTOM NATIVE NAVIGATION (Phone Ergonomics) */}
-      <nav className="md:hidden flex items-center justify-around bg-black border-t border-zinc-900 h-12 py-1 flex-shrink-0 z-20">
+      {/* 4. MOBILE BOTTOM NATIVE NAVIGATION (iPhone & Android Ergonomics) */}
+      <nav className="md:hidden flex items-center justify-around bg-black border-t border-zinc-900/80 h-13 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] flex-shrink-0 z-20">
         <button
-          onClick={() => {
-            setMobileTab("home");
-            setActiveNav("home");
-          }}
-          className={`flex flex-col items-center gap-0.5 transition ${
-            mobileTab === "home" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
+          onClick={() => handleMobileTabSwitch("cosmos")}
+          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
+            mobileTab === "cosmos" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <HomeIcon className="w-5 h-5 stroke-[2.2]" />
@@ -199,10 +207,18 @@ function MusicAppContent() {
         </button>
 
         <button
-          onClick={() => {
-            setMobileTab("library");
-          }}
-          className={`flex flex-col items-center gap-0.5 transition ${
+          onClick={() => handleMobileTabSwitch("imagination")}
+          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
+            mobileTab === "imagination" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
+          }`}
+        >
+          <MessageSquare className="w-5 h-5 stroke-[2.2]" />
+          <span className="text-[10px] tracking-tight">Imaginations</span>
+        </button>
+
+        <button
+          onClick={() => handleMobileTabSwitch("library")}
+          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
             mobileTab === "library" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
           }`}
         >

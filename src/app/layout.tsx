@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -14,11 +14,25 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Hello Music — A Different World of Music",
-  description: "Underrated songs only. Listen, publish, track views, and explore high-contrast sonic art.",
+  title: "Hello Music — Music Beyond Imagination",
+  description: "Underrated songs only. Listen to ZION, explore Kant & Nietzsche, Einstein & Sagan, and soar beyond imagination.",
   icons: {
     icon: "/covers/fly-away.svg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Hello Music",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -27,9 +41,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#09090b] text-[#f4f4f5] selection:bg-white selection:text-black min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-[#f4f4f5] selection:bg-white selection:text-black h-full overflow-hidden overscroll-none`}
       >
         {children}
       </body>

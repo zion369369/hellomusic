@@ -67,8 +67,8 @@ $$;`;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-5 sm:p-8 shadow-2xl my-auto">
         <button
           onClick={() => setIsSupabaseModalOpen(false)}
           className="absolute right-5 top-5 text-zinc-500 hover:text-white p-2 rounded-full hover:bg-zinc-900 transition"

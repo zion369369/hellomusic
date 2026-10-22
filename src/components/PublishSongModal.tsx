@@ -10,7 +10,7 @@ import {
   Image as ImageIcon,
   Check,
   Disc3,
-  Sparkles,
+  PlusCircle,
   Play,
   Pause,
   AlertCircle,
@@ -141,15 +141,15 @@ export default function PublishSongModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-xl bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-xl max-h-[88dvh] overflow-y-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-5 sm:p-8 shadow-2xl my-auto">
         {/* Close Button */}
         <button
           onClick={() => {
             if (previewAudioRef.current) previewAudioRef.current.pause();
             setIsPublishModalOpen(false);
           }}
-          className="absolute right-5 top-5 text-zinc-500 hover:text-white p-2 rounded-full hover:bg-zinc-900 transition"
+          className="absolute right-4 top-4 text-zinc-500 hover:text-white p-2 rounded-full hover:bg-zinc-900 transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -157,7 +157,7 @@ export default function PublishSongModal() {
         {/* Modal Header */}
         <div className="mb-6 space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-semibold text-zinc-300">
-            <Sparkles className="w-3.5 h-3.5 text-white" />
+            <PlusCircle className="w-3.5 h-3.5 text-white" />
             <span>Hello Music Creator Studio</span>
           </div>
           <h2 className="text-2xl font-black text-white tracking-tight">

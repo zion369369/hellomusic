@@ -50,7 +50,7 @@ export default function SongCard({ song }: SongCardProps) {
             className={`absolute bottom-2 right-2 transition-all duration-200 ease-out transform ${
               isNowPlaying || isCurrentActive
                 ? "opacity-100 translate-y-0 scale-100 shadow-2xl"
-                : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 scale-95 group-hover:scale-100 shadow-2xl"
+                : "opacity-100 sm:opacity-0 translate-y-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 scale-100 sm:scale-95 sm:group-hover:scale-100 shadow-2xl"
             }`}
           >
             <button

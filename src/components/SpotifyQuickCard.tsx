@@ -54,7 +54,7 @@ export default function SpotifyQuickCard({ song }: SpotifyQuickCardProps) {
           className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-xl transition-all duration-200 transform ${
             isNowPlaying || isCurrentActive
               ? "opacity-100 scale-100"
-              : "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
+              : "opacity-100 sm:opacity-0 scale-100 sm:scale-90 sm:group-hover:opacity-100 sm:group-hover:scale-100"
           }`}
           title={isNowPlaying ? "Pause" : "Play"}
         >

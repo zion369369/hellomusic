@@ -113,7 +113,7 @@ export default function Navbar() {
           className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-[11px] sm:text-xs hover:scale-105 active:scale-95 transition shadow-sm whitespace-nowrap"
         >
           <PlusCircle className="w-3.5 h-3.5 text-black" />
-          <span className="hidden xs:inline sm:inline">Publish</span>
+          <span className="hidden sm:inline">Publish</span>
         </button>
 
         {/* Bell Icon */}

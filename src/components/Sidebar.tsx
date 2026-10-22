@@ -184,7 +184,7 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
       </div>
 
       {/* Journeys, Playlists & Songs List (Synced with Cosmos Showcase) */}
-      <div className="flex-1 overflow-y-auto px-2 space-y-0.5 pb-4">
+      <div className="flex-1 overflow-y-auto px-2 space-y-0.5 pb-36 md:pb-6 touch-scroll">
         {/* 1. Philosophy: Kant & Nietzsche */}
         {showPhilosophy && (
           <div
