@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#1f1f23" />
+      <stop offset="60%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#000000" />
+    </radialGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#a1a1aa" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Obsidian Background -->
+  <rect width="800" height="800" fill="url(#bg)" />
+
+  <!-- Subtle grid texture -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="80" y1="0" x2="80" y2="800" />
+    <line x1="720" y1="0" x2="720" y2="800" />
+    <line x1="0" y1="80" x2="800" y2="80" />
+    <line x1="0" y1="720" x2="800" y2="720" />
+    <circle cx="400" cy="400" r="320" fill="none" stroke-opacity="0.03" />
+    <circle cx="400" cy="400" r="260" fill="none" stroke-opacity="0.05" />
+    <circle cx="400" cy="400" r="200" fill="none" stroke-opacity="0.06" stroke-dasharray="4 8" />
+  </g>
+
+  <!-- Inner Vinyl Grooves -->
+  <g stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.2">
+    <circle cx="400" cy="380" r="170" fill="none" />
+    <circle cx="400" cy="380" r="140" fill="none" />
+    <circle cx="400" cy="380" r="110" fill="none" stroke-opacity="0.12" />
+    <circle cx="400" cy="380" r="80" fill="none" stroke-dasharray="3 5" />
+  </g>
+
+  <!-- Central Sonic Sphere / Soundwave geometry -->
+  <circle cx="400" cy="380" r="56" fill="#09090b" stroke="#ffffff" stroke-width="2.5" />
+  <circle cx="400" cy="380" r="20" fill="#ffffff" />
+  <circle cx="400" cy="380" r="6" fill="#000000" />
+
+  <!-- Radiating Audio Waveform arcs -->
+  <g stroke="url(#silver)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
+    <path d="M 330 380 A 70 70 0 0 1 470 380" />
+    <path d="M 300 380 A 100 100 0 0 1 500 380" stroke-opacity="0.6" stroke-dasharray="12 10" />
+    <path d="M 270 380 A 130 130 0 0 1 530 380" stroke-opacity="0.4" />
+    <path d="M 310 380 A 90 90 0 0 0 490 380" stroke-opacity="0.5" />
+    <path d="M 280 380 A 120 120 0 0 0 520 380" stroke-opacity="0.3" stroke-dasharray="8 6" />
+  </g>
+
+  <!-- Top Badges -->
+  <text x="85" y="65" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#a1a1aa">HELLO MUSIC // 001</text>
+  <text x="715" y="65" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="3" fill="#ffffff">UNDERRATED ONLY</text>
+
+  <!-- Main Title & Artist -->
+  <g transform="translate(85, 600)">
+    <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="5" fill="#a1a1aa">ORIGINAL TRACK</text>
+    <text x="0" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="54" font-weight="900" letter-spacing="-1.5" fill="#ffffff">FLY AWAY</text>
+    <text x="0" y="98" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="4" fill="#d4d4d8">ARTIST: ZION</text>
+  </g>
+
+  <!-- Bottom right audio signature -->
+  <g transform="translate(715, 680)" text-anchor="end">
+    <rect x="-120" y="-22" width="120" height="28" rx="14" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.2" />
+    <text x="-60" y="-4" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#ffffff">HI-FI AUDIO</text>
+  </g>
+</svg>
