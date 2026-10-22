@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import {
-  Sparkles,
   Search,
   Heart,
   Volume2,
@@ -114,8 +113,8 @@ export default function Sidebar() {
             onClick={() => setActiveNav("home")}
             className="flex items-center gap-2.5 hover:text-white transition group text-left"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-700 to-black border border-white/20 flex items-center justify-center shadow">
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/20 flex items-center justify-center font-mono text-[11px] font-bold text-white shadow">
+              HM
             </div>
             <div>
               <span className="font-extrabold text-sm tracking-tight text-white group-hover:text-zinc-200 block">
