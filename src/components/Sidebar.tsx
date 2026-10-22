@@ -5,13 +5,13 @@ import { usePlayer } from "@/context/PlayerContext";
 import {
   Library,
   Plus,
-  ArrowRight,
   Search,
   Heart,
   Volume2,
   BookOpen,
   Atom,
   Globe,
+  ChevronRight,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -104,51 +104,27 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
     <aside
       className={`bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl ${className}`}
     >
-      {/* Header: Your Library (Authentic Spotify Desktop) */}
-      <div className="p-4 pb-2">
+      {/* Header: Clean Spotify Header without useless buttons */}
+      <div className="p-3.5 sm:p-4 pb-2">
         <div className="flex items-center justify-between text-[#b3b3b3]">
-          <button
-            onClick={() => {
-              setActiveNav("home");
-              if (onMobileItemClick) onMobileItemClick();
-            }}
-            className="flex items-center gap-3 hover:text-white transition group"
-          >
-            <Library className="w-6 h-6 stroke-[2.2]" />
-            <span className="font-bold text-sm tracking-tight text-[#b3b3b3] group-hover:text-white">
+          <div className="flex items-center gap-2.5">
+            <Library className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2] text-white" />
+            <span className="font-bold text-sm tracking-tight text-white">
               Your Library
             </span>
-          </button>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setIsPublishModalOpen(true)}
-              className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition"
-              title="Publish a song"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => {
-                setActiveNav("home");
-                if (onMobileItemClick) onMobileItemClick();
-              }}
-              className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition"
-              title="Enlarge library"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
+
+          <button
+            onClick={() => setIsPublishModalOpen(true)}
+            className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition active:scale-95"
+            title="Publish a song"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Tagline Pill */}
-        <div className="mt-2.5 px-2.5 py-1 rounded bg-[#1c1c1c] text-[10px] text-zinc-400 font-medium flex items-center justify-between">
-          <span className="tracking-wide text-zinc-300">Escape to Cosmos</span>
-          <span className="text-[9px] font-mono text-zinc-400">ZION</span>
-        </div>
-
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar">
+        {/* Filter Pills with full horizontal scroll */}
+        <div className="flex items-center gap-1.5 mt-3 overflow-x-auto no-scrollbar py-0.5">
           {["All", "Celestial", "Philosophy", "Science", "Liked"].map((pill) => (
             <button
               key={pill}
@@ -157,9 +133,9 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                 if (pill === "Liked") setActiveNav("liked");
                 else if (pill === "All") setActiveNav("home");
               }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition active:scale-95 ${
                 libraryFilter === pill
-                  ? "bg-white text-black font-bold"
+                  ? "bg-white text-black font-bold shadow-sm"
                   : "bg-[#242424] text-white hover:bg-[#2a2a2a]"
               }`}
             >
@@ -169,8 +145,8 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="px-4 py-2 flex items-center justify-between text-[#b3b3b3] text-xs">
+      {/* Search Bar inside library */}
+      <div className="px-3.5 sm:px-4 py-2 flex items-center justify-between text-[#b3b3b3] text-xs">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
@@ -178,25 +154,26 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
             value={librarySearch}
             onChange={(e) => setLibrarySearch(e.target.value)}
             placeholder="Search in Your Library"
-            className="w-full bg-[#1c1c1c] text-white placeholder-zinc-500 text-[11px] pl-8 pr-2 py-1 rounded-md border-none focus:outline-none focus:ring-1 focus:ring-zinc-700"
+            className="w-full bg-[#1c1c1c] text-white placeholder-zinc-500 text-xs pl-8 pr-2 py-1.5 rounded-md border border-transparent focus:border-zinc-700 focus:outline-none"
           />
         </div>
       </div>
 
-      {/* Journeys, Playlists & Songs List (Synced with Cosmos Showcase) */}
-      <div className="flex-1 overflow-y-auto px-2 space-y-0.5 pb-36 md:pb-6 touch-scroll">
+      {/* Journeys, Playlists & Songs List with touch-safe buttons */}
+      <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-36 md:pb-6 touch-scroll">
         {/* 1. Philosophy: Kant & Nietzsche */}
         {showPhilosophy && (
-          <div
+          <button
+            type="button"
             onClick={() => handleSelectJourney("philosophy")}
-            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+            className={`w-full text-left flex items-center gap-3 p-2 rounded-xl transition active:scale-[0.98] ${
               activeImaginationId === "philosophy"
-                ? "bg-[#262626] border-l-2 border-white pl-2"
-                : "hover:bg-[#1a1a1a]"
+                ? "bg-[#262626] border-l-2 border-white pl-2.5"
+                : "hover:bg-[#1a1a1a] active:bg-[#222222]"
             }`}
           >
-            <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
-              <BookOpen className="w-5 h-5 text-zinc-200 group-hover:text-white" />
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+              <BookOpen className="w-5 h-5 text-zinc-200" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
@@ -207,33 +184,34 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                 >
                   Kant & Nietzsche
                 </p>
-                {activeImaginationId === "philosophy" && (
+                {activeImaginationId === "philosophy" ? (
                   <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-bold">
                     ACTIVE
                   </span>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-zinc-600" />
                 )}
               </div>
-              <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
-                <span>Philosophy</span>
-                <span>•</span>
-                <span>Critique & Zarathustra</span>
+              <p className="text-xs text-[#b3b3b3] truncate">
+                Critique of Pure Reason & Zarathustra
               </p>
             </div>
-          </div>
+          </button>
         )}
 
         {/* 2. Science: Einstein & Sagan */}
         {showScience && (
-          <div
+          <button
+            type="button"
             onClick={() => handleSelectJourney("science")}
-            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+            className={`w-full text-left flex items-center gap-3 p-2 rounded-xl transition active:scale-[0.98] ${
               activeImaginationId === "science"
-                ? "bg-[#262626] border-l-2 border-white pl-2"
-                : "hover:bg-[#1a1a1a]"
+                ? "bg-[#262626] border-l-2 border-white pl-2.5"
+                : "hover:bg-[#1a1a1a] active:bg-[#222222]"
             }`}
           >
-            <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
-              <Atom className="w-5 h-5 text-cyan-300 group-hover:text-cyan-200" />
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+              <Atom className="w-5 h-5 text-cyan-300" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
@@ -244,36 +222,37 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                 >
                   Einstein & Sagan
                 </p>
-                {activeImaginationId === "science" && (
+                {activeImaginationId === "science" ? (
                   <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-bold">
                     ACTIVE
                   </span>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-zinc-600" />
                 )}
               </div>
-              <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
-                <span>Science</span>
-                <span>•</span>
-                <span>Spacetime & Star-Stuff</span>
+              <p className="text-xs text-[#b3b3b3] truncate">
+                Curvature of Spacetime & Pale Blue Dot
               </p>
             </div>
-          </div>
+          </button>
         )}
 
         {/* 3. Celestial Horizons (Moon, Venus, Jupiter, Saturn, Sun, Deep Cosmos) */}
         {filteredCelestial.map((dest) => {
           const isDestActive = activeImaginationId === dest.id;
           return (
-            <div
+            <button
+              type="button"
               key={dest.id}
               onClick={() => handleSelectJourney(dest.id)}
-              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+              className={`w-full text-left flex items-center gap-3 p-2 rounded-xl transition active:scale-[0.98] ${
                 isDestActive
-                  ? "bg-[#262626] border-l-2 border-cyan-400 pl-2"
-                  : "hover:bg-[#1a1a1a]"
+                  ? "bg-[#262626] border-l-2 border-cyan-400 pl-2.5"
+                  : "hover:bg-[#1a1a1a] active:bg-[#222222]"
               }`}
             >
-              <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-900 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
-                <Globe className="w-5 h-5 text-zinc-400 group-hover:text-white" />
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-zinc-900 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+                <Globe className="w-5 h-5 text-zinc-400" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between">
@@ -284,27 +263,30 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                   >
                     {dest.name}
                   </p>
-                  {isDestActive && (
+                  {isDestActive ? (
                     <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-400 text-black font-bold">
                       ORBIT
                     </span>
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-zinc-600" />
                   )}
                 </div>
                 <p className="text-xs text-[#b3b3b3] truncate">{dest.meta}</p>
               </div>
-            </div>
+            </button>
           );
         })}
 
         {/* 4. Liked Songs Row */}
         {(libraryFilter === "All" || libraryFilter === "Liked") && !filterLower && (
-          <div
+          <button
+            type="button"
             onClick={handleSelectLiked}
-            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition ${
-              activeNav === "liked" ? "bg-[#242424]" : "hover:bg-[#1a1a1a]"
+            className={`w-full text-left flex items-center gap-3 p-2 rounded-xl transition active:scale-[0.98] ${
+              activeNav === "liked" ? "bg-[#242424]" : "hover:bg-[#1a1a1a] active:bg-[#222222]"
             }`}
           >
-            <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-700 to-black flex items-center justify-center flex-shrink-0 shadow">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-zinc-700 to-black flex items-center justify-center flex-shrink-0 shadow">
               <Heart className="w-5 h-5 fill-white text-white" />
             </div>
             <div className="min-w-0 flex-1">
@@ -317,21 +299,22 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                 </span>
               </p>
             </div>
-          </div>
+          </button>
         )}
 
         {/* 5. Songs List */}
         {filteredSongs.map((song) => {
           const isCurrentActive = currentSong?.id === song.id;
           return (
-            <div
+            <button
+              type="button"
               key={song.id}
               onClick={() => handleSelectSong(song)}
-              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
-                isCurrentActive ? "bg-[#242424]" : "hover:bg-[#1a1a1a]"
+              className={`w-full text-left flex items-center gap-3 p-2 rounded-xl transition active:scale-[0.98] ${
+                isCurrentActive ? "bg-[#242424]" : "hover:bg-[#1a1a1a] active:bg-[#222222]"
               }`}
             >
-              <div className="relative w-12 h-12 rounded overflow-hidden bg-black flex-shrink-0 shadow">
+              <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-black flex-shrink-0 shadow">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={song.cover_url}
@@ -350,7 +333,7 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                   className={`text-sm font-semibold truncate ${
                     isCurrentActive
                       ? "text-white font-bold"
-                      : "text-zinc-100 group-hover:text-white"
+                      : "text-zinc-100"
                   }`}
                 >
                   {song.title}
@@ -361,7 +344,7 @@ export default function Sidebar({ onMobileItemClick, className = "" }: SidebarPr
                   <span>{song.artist}</span>
                 </p>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

@@ -14,14 +14,14 @@ import {
   VolumeX,
   Volume1,
   Heart,
-  ListMusic,
-  Laptop2,
-  Maximize2,
-  Mic2,
   Eye,
 } from "lucide-react";
 
-export default function PlayerBottomBar() {
+interface PlayerBottomBarProps {
+  onOpenCosmos?: () => void;
+}
+
+export default function PlayerBottomBar({ onOpenCosmos }: PlayerBottomBarProps) {
   const {
     currentSong,
     isPlaying,
@@ -40,6 +40,7 @@ export default function PlayerBottomBar() {
     toggleShuffle,
     toggleRepeat,
     toggleLike,
+    setActiveNav,
   } = usePlayer();
 
   if (!currentSong) return null;
@@ -52,6 +53,11 @@ export default function PlayerBottomBar() {
   };
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const handleMiniPlayerClick = () => {
+    setActiveNav("home");
+    if (onOpenCosmos) onOpenCosmos();
+  };
 
   return (
     <>
@@ -66,8 +72,11 @@ export default function PlayerBottomBar() {
         </div>
 
         <div className="h-14 px-3 flex items-center justify-between">
-          {/* Song info */}
-          <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
+          {/* Tapping song info navigates to Cosmos Showcase */}
+          <div
+            onClick={handleMiniPlayerClick}
+            className="flex items-center gap-2.5 min-w-0 flex-1 pr-2 cursor-pointer active:opacity-80"
+          >
             <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0 bg-black shadow">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -86,7 +95,7 @@ export default function PlayerBottomBar() {
             </div>
           </div>
 
-          {/* Quick controls */}
+          {/* Quick controls with 40px+ touch targets */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={() => toggleLike(currentSong.id)}
@@ -116,7 +125,7 @@ export default function PlayerBottomBar() {
       </div>
 
       {/* 2. DESKTOP FULL SPOTIFY DOCK (>= md screens) */}
-      <footer className="hidden md:flex h-20 bg-black px-4 items-center justify-between select-none z-30 flex-shrink-0 border-t border-zinc-900/40">
+      <footer className="hidden md:flex h-20 bg-black px-4 items-center justify-between select-none z-30 flex-shrink-0 border-t border-zinc-900/60">
         {/* LEFT: Current Track Details */}
         <div className="flex items-center gap-3 w-[260px] min-w-[200px]">
           {/* Album Artwork */}
@@ -141,7 +150,7 @@ export default function PlayerBottomBar() {
 
           <button
             onClick={() => toggleLike(currentSong.id)}
-            className="text-[#b3b3b3] hover:text-white transition p-1"
+            className="text-[#b3b3b3] hover:text-white transition p-2 min-w-[36px] min-h-[36px] flex items-center justify-center active:scale-90"
             title={currentSong.is_liked ? "Remove from Your Library" : "Save to Your Library"}
           >
             <Heart
@@ -160,13 +169,13 @@ export default function PlayerBottomBar() {
             <button
               onClick={toggleShuffle}
               title={isShuffle ? "Disable shuffle" : "Enable shuffle"}
-              className={`transition relative p-1 ${
+              className={`transition relative p-1.5 ${
                 isShuffle ? "text-white" : "text-[#b3b3b3] hover:text-white"
               }`}
             >
               <Shuffle className="w-4 h-4" />
               {isShuffle && (
-                <span className="w-1 h-1 bg-white rounded-full absolute -bottom-1 left-1/2 -translate-x-1/2" />
+                <span className="w-1 h-1 bg-white rounded-full absolute -bottom-0.5 left-1/2 -translate-x-1/2" />
               )}
             </button>
 
@@ -174,7 +183,7 @@ export default function PlayerBottomBar() {
             <button
               onClick={playPrev}
               title="Previous"
-              className="text-[#b3b3b3] hover:text-white transition active:scale-95"
+              className="text-[#b3b3b3] hover:text-white transition active:scale-95 p-1"
             >
               <SkipBack className="w-5 h-5 fill-current" />
             </button>
@@ -183,7 +192,7 @@ export default function PlayerBottomBar() {
             <button
               onClick={togglePlay}
               title={isPlaying ? "Pause" : "Play"}
-              className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow hover:scale-105 active:scale-95 transition-transform"
+              className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center shadow hover:scale-105 active:scale-95 transition-transform"
             >
               {isPlaying ? (
                 <Pause className="w-4 h-4 fill-black" />
@@ -196,7 +205,7 @@ export default function PlayerBottomBar() {
             <button
               onClick={playNext}
               title="Next"
-              className="text-[#b3b3b3] hover:text-white transition active:scale-95"
+              className="text-[#b3b3b3] hover:text-white transition active:scale-95 p-1"
             >
               <SkipForward className="w-5 h-5 fill-current" />
             </button>
@@ -205,7 +214,7 @@ export default function PlayerBottomBar() {
             <button
               onClick={toggleRepeat}
               title={`Repeat mode: ${repeatMode}`}
-              className={`transition relative p-1 ${
+              className={`transition relative p-1.5 ${
                 repeatMode !== "off" ? "text-white" : "text-[#b3b3b3] hover:text-white"
               }`}
             >
@@ -215,7 +224,7 @@ export default function PlayerBottomBar() {
                 <Repeat className="w-4 h-4" />
               )}
               {repeatMode !== "off" && (
-                <span className="w-1 h-1 bg-white rounded-full absolute -bottom-1 left-1/2 -translate-x-1/2" />
+                <span className="w-1 h-1 bg-white rounded-full absolute -bottom-0.5 left-1/2 -translate-x-1/2" />
               )}
             </button>
           </div>
@@ -252,34 +261,19 @@ export default function PlayerBottomBar() {
           </div>
         </div>
 
-        {/* RIGHT: Spotify Extra Actions & Volume Slider */}
+        {/* RIGHT: Views Badge & Real Volume Slider */}
         <div className="flex items-center justify-end gap-3 w-[260px] min-w-[200px] text-[#b3b3b3]">
           {/* Views Badge */}
-          <div className="hidden xl:flex items-center gap-1 text-[11px] font-mono text-zinc-400 mr-1" title="Plays">
+          <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 mr-2" title="Plays">
             <Eye className="w-3.5 h-3.5 text-zinc-500" />
             <span>{currentSong.views_count.toLocaleString()}</span>
           </div>
-
-          {/* Lyrics */}
-          <button className="hover:text-white transition p-1 hidden sm:block" title="Lyrics">
-            <Mic2 className="w-4 h-4" />
-          </button>
-
-          {/* Queue */}
-          <button className="hover:text-white transition p-1" title="Queue">
-            <ListMusic className="w-4 h-4" />
-          </button>
-
-          {/* Connect to device */}
-          <button className="hover:text-white transition p-1 hidden sm:block" title="Connect to a device">
-            <Laptop2 className="w-4 h-4" />
-          </button>
 
           {/* Volume Controls */}
           <div className="flex items-center gap-2 group">
             <button
               onClick={toggleMute}
-              className="hover:text-white transition"
+              className="hover:text-white transition p-1"
               title={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted || volume === 0 ? (
@@ -309,11 +303,6 @@ export default function PlayerBottomBar() {
               />
             </div>
           </div>
-
-          {/* Fullscreen */}
-          <button className="hover:text-white transition p-1 hidden md:block" title="Full screen">
-            <Maximize2 className="w-4 h-4" />
-          </button>
         </div>
       </footer>
     </>

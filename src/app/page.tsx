@@ -11,7 +11,19 @@ import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
 import AuthModal from "@/components/AuthModal";
-import { Music, Disc3, Heart, Home as HomeIcon, Library, MessageSquare } from "lucide-react";
+import {
+  Music,
+  Disc3,
+  Heart,
+  Home as HomeIcon,
+  Library,
+  Search,
+  X,
+  BookOpen,
+  Atom,
+  Globe,
+  Compass,
+} from "lucide-react";
 
 function MusicAppContent() {
   const {
@@ -20,27 +32,19 @@ function MusicAppContent() {
     activeNav,
     setActiveNav,
     searchQuery,
+    setSearchQuery,
     selectedGenre,
     setSelectedGenre,
     setIsPublishModalOpen,
     isLoadingSongs,
     setActiveImaginationId,
+    playSong,
   } = usePlayer();
 
-  const [mobileTab, setMobileTab] = useState<"cosmos" | "imagination" | "library">("cosmos");
+  const [mobileTab, setMobileTab] = useState<"cosmos" | "search" | "library">("cosmos");
 
   const categoryPills = ["All", "Escape to Cosmos", "Original"];
   const flyAwaySong = songs[0];
-
-  const handleMobileTabSwitch = (tab: "cosmos" | "imagination" | "library") => {
-    setMobileTab(tab);
-    if (tab === "cosmos") {
-      setActiveNav("home");
-    } else if (tab === "imagination") {
-      setActiveNav("home");
-      setActiveImaginationId("imagination");
-    }
-  };
 
   return (
     <div className="flex flex-col h-[100dvh] w-full max-w-full overflow-hidden bg-black text-white font-sans select-none">
@@ -52,7 +56,7 @@ function MusicAppContent() {
         {/* DESKTOP SIDEBAR: Your Library */}
         <Sidebar className="hidden md:flex md:w-[280px] lg:w-[320px] flex-shrink-0" />
 
-        {/* MOBILE LIBRARY (Visible when mobileTab === 'library') */}
+        {/* MOBILE LIBRARY VIEW (Visible when mobileTab === 'library') */}
         {mobileTab === "library" && (
           <div className="flex md:hidden flex-1 w-full h-full min-h-0">
             <Sidebar
@@ -62,10 +66,140 @@ function MusicAppContent() {
           </div>
         )}
 
-        {/* MAIN CANVAS (Visible on desktop OR when mobileTab === 'cosmos' or 'imagination') */}
+        {/* MOBILE DEDICATED SEARCH VIEW (Visible when mobileTab === 'search') */}
+        {mobileTab === "search" && (
+          <div className="flex md:hidden flex-1 flex-col w-full h-full min-h-0 bg-[#121212] rounded-lg p-3.5 sm:p-6 overflow-y-auto pb-36 touch-scroll border border-zinc-900/60 shadow-xl">
+            {/* Search Input Bar */}
+            <div className="relative flex items-center bg-[#242424] focus-within:bg-[#282828] rounded-full px-4 py-2.5 mb-5 border border-transparent focus-within:border-white transition shadow-md">
+              <Search className="w-4 h-4 text-zinc-400 mr-2.5 flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search songs, artists, or cosmic journeys..."
+                className="w-full bg-transparent text-white text-sm placeholder-zinc-500 font-normal border-none outline-none"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="text-zinc-400 hover:text-white ml-2 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Live Search Results or Category Explore Cards */}
+            {searchQuery.trim() ? (
+              <div className="space-y-3">
+                <h3 className="text-xs font-mono uppercase tracking-widest text-zinc-400">
+                  Search Results
+                </h3>
+                {filteredSongs.length > 0 ? (
+                  filteredSongs.map((song) => (
+                    <button
+                      type="button"
+                      key={song.id}
+                      onClick={() => {
+                        playSong(song);
+                        setMobileTab("cosmos");
+                      }}
+                      className="w-full text-left flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/60 hover:bg-zinc-800 transition active:scale-[0.98]"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={song.cover_url}
+                        alt={song.title}
+                        className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-white truncate">{song.title}</p>
+                        <p className="text-xs text-zinc-400 truncate">{song.artist}</p>
+                      </div>
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-xs text-zinc-500 py-6 text-center">
+                    No songs match &ldquo;{searchQuery}&rdquo;. Try &ldquo;Fly away&rdquo;, &ldquo;Kant&rdquo;, or &ldquo;Saturn&rdquo;.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-xs font-mono uppercase tracking-widest text-zinc-400">
+                  Explore Cosmos & Philosophy
+                </h3>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveImaginationId("philosophy");
+                      setMobileTab("cosmos");
+                    }}
+                    className="p-4 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/10 text-left hover:border-white/30 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                  >
+                    <BookOpen className="w-5 h-5 text-zinc-200" />
+                    <div>
+                      <p className="text-sm font-bold text-white">Philosophy</p>
+                      <p className="text-[10px] text-zinc-400">Kant & Nietzsche</p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveImaginationId("science");
+                      setMobileTab("cosmos");
+                    }}
+                    className="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/40 to-zinc-950 border border-cyan-500/20 text-left hover:border-cyan-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                  >
+                    <Atom className="w-5 h-5 text-cyan-300" />
+                    <div>
+                      <p className="text-sm font-bold text-white">Science</p>
+                      <p className="text-[10px] text-zinc-400">Einstein & Sagan</p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveImaginationId("moon");
+                      setMobileTab("cosmos");
+                    }}
+                    className="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/40 to-zinc-950 border border-indigo-500/20 text-left hover:border-indigo-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                  >
+                    <Globe className="w-5 h-5 text-indigo-300" />
+                    <div>
+                      <p className="text-sm font-bold text-white">Celestial</p>
+                      <p className="text-[10px] text-zinc-400">Planets & Deep Void</p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveImaginationId("meditation");
+                      setMobileTab("cosmos");
+                    }}
+                    className="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/40 to-zinc-950 border border-emerald-500/20 text-left hover:border-emerald-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                  >
+                    <Compass className="w-5 h-5 text-emerald-300" />
+                    <div>
+                      <p className="text-sm font-bold text-white">30s Meditation</p>
+                      <p className="text-[10px] text-zinc-400">Calm Mind Flight</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* MAIN CANVAS (Visible on desktop OR when mobileTab === 'cosmos') */}
         <main
           className={`${
-            mobileTab !== "library" ? "flex" : "hidden md:flex"
+            mobileTab === "cosmos" ? "flex" : "hidden md:flex"
           } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3 sm:p-6 pb-36 md:pb-8 relative border border-zinc-900/60 shadow-xl touch-scroll`}
         >
           {/* Category Chips Bar */}
@@ -76,6 +210,7 @@ function MusicAppContent() {
                 (pill !== "All" && selectedGenre.toLowerCase().includes(pill.toLowerCase()));
               return (
                 <button
+                  type="button"
                   key={pill}
                   onClick={() => {
                     if (pill === "All") setSelectedGenre("All");
@@ -179,6 +314,7 @@ function MusicAppContent() {
                       : "No songs in this view yet."}
                   </p>
                   <button
+                    type="button"
                     onClick={() => setIsPublishModalOpen(true)}
                     className="px-4 py-2 rounded-full bg-white text-black font-bold text-xs hover:bg-zinc-200 transition"
                   >
@@ -192,13 +328,17 @@ function MusicAppContent() {
       </div>
 
       {/* 3. PERSISTENT SPOTIFY BOTTOM PLAYER BAR (Mobile Mini-Player + Desktop Full Dock) */}
-      <PlayerBottomBar />
+      <PlayerBottomBar onOpenCosmos={() => setMobileTab("cosmos")} />
 
-      {/* 4. MOBILE BOTTOM NATIVE NAVIGATION (iPhone & Android Ergonomics) */}
-      <nav className="md:hidden flex items-center justify-around bg-black border-t border-zinc-900/80 h-13 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] flex-shrink-0 z-20">
+      {/* 4. MOBILE BOTTOM NATIVE NAVIGATION (iPhone & Android 3-Tab Bar) */}
+      <nav className="md:hidden flex items-center justify-around bg-black border-t border-zinc-900/80 h-14 py-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] flex-shrink-0 z-20">
         <button
-          onClick={() => handleMobileTabSwitch("cosmos")}
-          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
+          type="button"
+          onClick={() => {
+            setMobileTab("cosmos");
+            setActiveNav("home");
+          }}
+          className={`flex flex-col items-center gap-1 px-4 py-1.5 transition active:scale-95 ${
             mobileTab === "cosmos" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
@@ -207,18 +347,24 @@ function MusicAppContent() {
         </button>
 
         <button
-          onClick={() => handleMobileTabSwitch("imagination")}
-          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
-            mobileTab === "imagination" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
+          type="button"
+          onClick={() => {
+            setMobileTab("search");
+          }}
+          className={`flex flex-col items-center gap-1 px-4 py-1.5 transition active:scale-95 ${
+            mobileTab === "search" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
-          <MessageSquare className="w-5 h-5 stroke-[2.2]" />
-          <span className="text-[10px] tracking-tight">Imaginations</span>
+          <Search className="w-5 h-5 stroke-[2.2]" />
+          <span className="text-[10px] tracking-tight">Search</span>
         </button>
 
         <button
-          onClick={() => handleMobileTabSwitch("library")}
-          className={`flex flex-col items-center gap-0.5 px-3 py-1 transition active:scale-95 ${
+          type="button"
+          onClick={() => {
+            setMobileTab("library");
+          }}
+          className={`flex flex-col items-center gap-1 px-4 py-1.5 transition active:scale-95 ${
             mobileTab === "library" ? "text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
