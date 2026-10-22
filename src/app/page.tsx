@@ -7,12 +7,10 @@ import Navbar from "@/components/Navbar";
 import SongCard from "@/components/SongCard";
 import SpotifyQuickCard from "@/components/SpotifyQuickCard";
 import CosmosAestheticPanel from "@/components/CosmosAestheticPanel";
-import MusicBeyondImaginationHero from "@/components/MusicBeyondImaginationHero";
 import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
 import AuthModal from "@/components/AuthModal";
-import LiveCosmicFlightModal from "@/components/LiveCosmicFlightModal";
 import { Music, Disc3, Heart } from "lucide-react";
 
 function MusicAppContent() {
@@ -30,7 +28,7 @@ function MusicAppContent() {
 
   const categoryPills = [
     "All",
-    "Beyond Imagination",
+    "Music Beyond Imagination",
     "Escape to Cosmos",
     "Original",
   ];
@@ -43,7 +41,7 @@ function MusicAppContent() {
 
       {/* 2. MAIN 2-COLUMN VIEW (Card-in-card with 8px gaps like Spotify desktop) */}
       <div className="flex-1 flex gap-2 px-2 pb-2 min-h-0 overflow-hidden">
-        {/* LEFT SIDEBAR: Your Library */}
+        {/* LEFT SIDEBAR: Your Imagination */}
         <Sidebar />
 
         {/* MAIN CANVAS */}
@@ -73,11 +71,6 @@ function MusicAppContent() {
             })}
           </div>
 
-          {/* UPON OPENING SCREEN: ANIMATED GUIDED IMAGINATION ON FLY (THE USP) */}
-          {activeNav === "home" && !searchQuery.trim() && (
-            <MusicBeyondImaginationHero />
-          )}
-
           {/* Quick-Picks Row */}
           {activeNav === "home" && !searchQuery.trim() && (
             <div className="mb-6">
@@ -105,7 +98,7 @@ function MusicAppContent() {
             </div>
           )}
 
-          {/* MAIN SHOWCASE: SONG ON THE LEFT + DEEP AESTHETIC COSMOS ON THE RIGHT */}
+          {/* MAIN SHOWCASE: SONG ON THE LEFT + GUIDED IMAGINATION & PHILOSOPHY ON THE RIGHT */}
           {activeNav === "home" && !searchQuery.trim() && flyAwaySong ? (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
@@ -126,7 +119,7 @@ function MusicAppContent() {
                   <SongCard song={flyAwaySong} />
                 </div>
 
-                {/* RIGHT SIDE OF THE SONG: Deep Aesthetic Cosmos Quotes */}
+                {/* RIGHT SIDE OF THE SONG: Guided Imagination & Philosophical Flight Panel */}
                 <div className="lg:col-span-7 flex flex-col justify-stretch">
                   <CosmosAestheticPanel />
                 </div>
@@ -183,7 +176,6 @@ function MusicAppContent() {
       <PublishSongModal />
       <SupabaseSetupModal />
       <AuthModal />
-      <LiveCosmicFlightModal />
     </div>
   );
 }

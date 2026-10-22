@@ -9,6 +9,12 @@ import {
   Search,
   Heart,
   Volume2,
+  Moon,
+  Sun,
+  Globe,
+  Compass,
+  Wind,
+  BookOpen,
 } from "lucide-react";
 
 interface ImaginationJourney {
@@ -17,54 +23,63 @@ interface ImaginationJourney {
   prompt: string;
   subtitle: string;
   tag: string;
-  icon: string;
+  iconType: "moon" | "venus" | "jupiter" | "sun" | "cosmos" | "philosophy";
 }
 
 export const IMAGINATION_JOURNEYS: ImaginationJourney[] = [
   {
-    id: "fly-earth",
-    title: "Fly Above the Earth",
+    id: "moon",
+    title: "The Moon",
     prompt:
-      "Imagine you are flying... flying above the Earth. Take a breath, why so serious?",
-    subtitle: "360° Guided Flight • 418 KM Orbit",
-    tag: "Guided Flight",
-    icon: "🪽",
+      "Imagine ascending silently through lunar gravity. There is no air, no friction, only eternal stillness. All worldly weight dissolves.",
+    subtitle: "Lunar Serenity • 384,400 KM",
+    tag: "Destination",
+    iconType: "moon",
   },
   {
-    id: "breath-reset",
-    title: "Take a Breath (Why So Serious?)",
+    id: "venus",
+    title: "Venus",
     prompt:
-      "Take a breath... why so serious? Inhale the calm of the cosmos, exhale all gravity.",
-    subtitle: "Mindful Reset • 4-4-4 Cadence",
-    tag: "Meditation",
-    icon: "🧘",
+      "Soaring above the morning star. You drift weightless through high golden clouds of light, suspended between night and dawn.",
+    subtitle: "Morning Star • 41.4M KM",
+    tag: "Destination",
+    iconType: "venus",
   },
   {
-    id: "cosmos-soaring",
-    title: "The Cosmos Soaring With You",
+    id: "jupiter",
+    title: "Jupiter",
     prompt:
-      "I asked the universe why we cannot fly? she whispered, 'the cosmos is soaring with you.'",
-    subtitle: "Deep Cosmos Elevation • Starlight Field",
-    tag: "Cosmos",
-    icon: "🌌",
+      "Gliding high above the great orbital bands. You are a solitary speck in the presence of vast cosmic majesty, yet completely at peace.",
+    subtitle: "Gas Giant • 628.7M KM",
+    tag: "Destination",
+    iconType: "jupiter",
   },
   {
-    id: "light-dove",
-    title: "The Light Dove Soaring",
+    id: "sun",
+    title: "The Sun",
     prompt:
-      "The light dove, cleaving in the air. The higher we soar, the smaller we appear to those who cannot fly.",
-    subtitle: "Weightless Glide • Atmospheric Lift",
-    tag: "Poetic",
-    icon: "🕊️",
+      "Basking in pure primordial light. Every atom within your consciousness originated in stellar fire. You are light returning to light.",
+    subtitle: "Solar Radiance • 149.6M KM",
+    tag: "Destination",
+    iconType: "sun",
   },
   {
-    id: "mind-wings",
-    title: "Wings of Imagination",
+    id: "cosmos",
+    title: "Deep Cosmos",
     prompt:
-      "Want to fly? It always starts with imagination. And once you've learned to fly in your mind, even the universe is no longer the limit. 🪽",
-    subtitle: "Transcendental Imagination • Infinite Reach",
-    tag: "Imagination",
-    icon: "✨",
+      "Drifting beyond all planetary bounds into the starlight void. Once you have learned to fly in your mind, the universe is no longer the limit.",
+    subtitle: "Beyond Horizons • Infinite Reach",
+    tag: "Destination",
+    iconType: "cosmos",
+  },
+  {
+    id: "philosophy",
+    title: "Philosophy of Flight",
+    prompt:
+      "The light dove, cleaving the air in her free flight, and feeling its resistance, might imagine that its flight would be still easier in empty space.",
+    subtitle: "Kant, Nietzsche & Plato",
+    tag: "Philosophy",
+    iconType: "philosophy",
   },
 ];
 
@@ -89,9 +104,9 @@ export default function Sidebar() {
   const flyAwaySong = songs[0];
 
   const filteredJourneys = IMAGINATION_JOURNEYS.filter((journey) => {
-    if (imaginationFilter === "Guided Flights" && journey.tag !== "Guided Flight")
+    if (imaginationFilter === "Destinations" && journey.tag !== "Destination")
       return false;
-    if (imaginationFilter === "Meditations" && journey.tag !== "Meditation")
+    if (imaginationFilter === "Philosophy" && journey.tag !== "Philosophy")
       return false;
     if (imaginationSearch.trim()) {
       return (
@@ -111,23 +126,42 @@ export default function Sidebar() {
     }
   };
 
+  const renderIcon = (type: ImaginationJourney["iconType"]) => {
+    switch (type) {
+      case "moon":
+        return <Moon className="w-4 h-4 text-zinc-300" />;
+      case "venus":
+        return <Sparkles className="w-4 h-4 text-zinc-300" />;
+      case "jupiter":
+        return <Globe className="w-4 h-4 text-zinc-300" />;
+      case "sun":
+        return <Sun className="w-4 h-4 text-zinc-300" />;
+      case "cosmos":
+        return <Compass className="w-4 h-4 text-zinc-300" />;
+      case "philosophy":
+        return <BookOpen className="w-4 h-4 text-zinc-300" />;
+      default:
+        return <Compass className="w-4 h-4 text-zinc-300" />;
+    }
+  };
+
   return (
-    <aside className="w-[300px] lg:w-[330px] flex-shrink-0 bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl">
-      {/* Header: Your Imagination (The USP) */}
+    <aside className="w-[300px] lg:w-[320px] flex-shrink-0 bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl">
+      {/* Header: Your Imagination */}
       <div className="p-4 pb-2">
         <div className="flex items-center justify-between text-[#b3b3b3]">
           <button
             onClick={() => setActiveNav("home")}
             className="flex items-center gap-2.5 hover:text-white transition group text-left"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-700 to-black border border-white/20 flex items-center justify-center shadow">
-              <Sparkles className="w-4 h-4 text-white animate-pulse" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center shadow">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="font-extrabold text-sm tracking-tight text-white group-hover:text-zinc-200 block">
+              <span className="font-bold text-sm tracking-tight text-white group-hover:text-zinc-200 block">
                 Your Imagination
               </span>
-              <span className="text-[10px] font-mono tracking-widest text-zinc-400 block -mt-0.5 uppercase">
+              <span className="text-[10px] font-mono tracking-widest text-zinc-500 block -mt-0.5 uppercase">
                 Music Beyond Imagination
               </span>
             </div>
@@ -137,7 +171,7 @@ export default function Sidebar() {
             <button
               onClick={() => {
                 const custom = window.prompt(
-                  "Enter your custom Imagination Prompt (e.g. Floating weightless over ocean auroras at midnight):",
+                  "Where does your mind want to fly? (e.g. Orbiting Saturn's rings):",
                   imaginationPrompt
                 );
                 if (custom && custom.trim()) {
@@ -148,32 +182,32 @@ export default function Sidebar() {
                 }
               }}
               className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition text-zinc-400"
-              title="Add Custom Imagination Prompt"
+              title="Add Custom Destination"
             >
               <Plus className="w-5 h-5" />
             </button>
             <button
               onClick={() => setActiveNav("home")}
               className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition text-zinc-400"
-              title="Focus Imagination Screen"
+              title="Focus Panel"
             >
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Tagline Badge */}
-        <div className="mt-2.5 px-2.5 py-1.5 rounded-md bg-[#18181b] border border-white/10 text-[10px] text-zinc-300 font-mono flex items-center justify-between">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-            <span>USP: Guided Screen Meditation</span>
+        {/* Apple Native Subtitle Pill */}
+        <div className="mt-2.5 px-2.5 py-1.5 rounded bg-[#18181b] border border-white/5 text-[10px] text-zinc-400 font-mono flex items-center justify-between">
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <Wind className="w-3 h-3 text-zinc-400" />
+            <span>Guided Meditation Engine</span>
           </span>
-          <span className="text-zinc-400 font-bold">ZION</span>
+          <span className="text-zinc-500 font-medium">ZION</span>
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-1.5 mt-3 overflow-x-auto no-scrollbar">
-          {["All", "Guided Flights", "Meditations", "Liked"].map((pill) => (
+          {["All", "Destinations", "Philosophy", "Liked"].map((pill) => (
             <button
               key={pill}
               onClick={() => {
@@ -193,7 +227,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Search Bar in Your Imagination */}
+      {/* Search Bar */}
       <div className="px-4 py-2 flex items-center justify-between text-[#b3b3b3] text-xs">
         <div className="relative flex-1">
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500" />
@@ -201,15 +235,14 @@ export default function Sidebar() {
             type="text"
             value={imaginationSearch}
             onChange={(e) => setImaginationSearch(e.target.value)}
-            placeholder="Search Your Imagination..."
+            placeholder="Search Destinations..."
             className="w-full bg-[#1c1c1c] text-white placeholder-zinc-500 text-[11px] pl-8 pr-2 py-1 rounded-md border-none focus:outline-none focus:ring-1 focus:ring-zinc-700"
           />
         </div>
       </div>
 
-      {/* List: Guided Imagination Journeys & Soundtracks */}
+      {/* List: Guided Imagination Destinations & Audio */}
       <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-4">
-        {/* Curated Guided Imagination Journeys */}
         {filteredJourneys.map((journey) => {
           const isActive = activeImaginationId === journey.id;
           return (
@@ -218,18 +251,18 @@ export default function Sidebar() {
               onClick={() => handleSelectJourney(journey)}
               className={`flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition group border ${
                 isActive
-                  ? "bg-white/10 border-white/20 shadow-md backdrop-blur-md"
-                  : "border-transparent hover:bg-[#1a1a1a] hover:border-white/5"
+                  ? "bg-white/10 border-white/20 shadow-sm"
+                  : "border-transparent hover:bg-[#1a1a1a]"
               }`}
             >
               <div
-                className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 text-lg shadow ${
+                className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow ${
                   isActive
-                    ? "bg-white text-black font-bold shadow-white/10"
-                    : "bg-[#1f1f1f] border border-white/10 group-hover:border-white/20"
+                    ? "bg-white text-black"
+                    : "bg-[#18181b] border border-white/5"
                 }`}
               >
-                {journey.icon}
+                {renderIcon(journey.iconType)}
               </div>
 
               <div className="min-w-0 flex-1">
@@ -242,7 +275,7 @@ export default function Sidebar() {
                     {journey.title}
                   </p>
                   {isActive && isPlaying && (
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   )}
                 </div>
                 <p className="text-[11px] text-zinc-400 truncate mt-0.5">
@@ -255,8 +288,8 @@ export default function Sidebar() {
 
         {/* Separator */}
         <div className="my-2 border-t border-zinc-800/80 px-2 pt-2">
-          <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
-            Original Soundtrack
+          <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
+            Original Master Track
           </span>
         </div>
 
@@ -269,20 +302,20 @@ export default function Sidebar() {
               : "border-transparent hover:bg-[#1a1a1a]"
           }`}
         >
-          <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-zinc-700 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
-            <Heart className="w-5 h-5 fill-white text-white" />
+          <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center flex-shrink-0 shadow">
+            <Heart className="w-4 h-4 fill-white text-white" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs sm:text-sm font-semibold text-white truncate">
               Liked Journeys
             </p>
             <p className="text-[11px] text-zinc-400 truncate">
-              {likedCount} {likedCount === 1 ? "saved journey" : "saved journeys"}
+              {likedCount} {likedCount === 1 ? "saved" : "saved"}
             </p>
           </div>
         </div>
 
-        {/* ZION — Fly away Original Soundtrack Card */}
+        {/* ZION — Fly away Song */}
         {songs.map((song) => {
           const isCurrentActive = currentSong?.id === song.id;
           return (
@@ -295,7 +328,7 @@ export default function Sidebar() {
                   : "border-transparent hover:bg-[#1a1a1a]"
               }`}
             >
-              <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/10 shadow">
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/10 shadow">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={song.cover_url}
@@ -322,7 +355,7 @@ export default function Sidebar() {
                 <p className="text-[11px] text-zinc-400 truncate flex items-center gap-1">
                   <span>{song.artist}</span>
                   <span>•</span>
-                  <span>Original Master</span>
+                  <span>Lossless Audio</span>
                 </p>
               </div>
             </div>

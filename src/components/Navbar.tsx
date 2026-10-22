@@ -14,7 +14,6 @@ import {
   X,
   User,
   LogOut,
-  Orbit,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -24,7 +23,6 @@ export default function Navbar() {
     setActiveNav,
     setIsPublishModalOpen,
     setIsAuthModalOpen,
-    setIsFlightModalOpen,
     currentUser,
     logoutUser,
   } = usePlayer();
@@ -101,18 +99,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* RIGHT: Flight Mode, Publish Button, Notifications, Profile */}
+      {/* RIGHT: Publish Button, Notifications, Profile */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* 360° Flight Experience Launcher */}
-        <button
-          onClick={() => setIsFlightModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-zinc-900 to-black border border-white/25 text-white font-bold text-xs hover:border-white hover:scale-105 active:scale-95 transition shadow-sm"
-          title="Launch 360° Cosmic Flight Simulation"
-        >
-          <Orbit className="w-3.5 h-3.5 text-cyan-300 animate-spin-slow" />
-          <span className="hidden sm:inline">360° Flight</span>
-        </button>
-
         {/* Publish Action Button */}
         <button
           onClick={() => setIsPublishModalOpen(true)}
