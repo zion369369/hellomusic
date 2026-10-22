@@ -31,7 +31,7 @@ export default function Navbar() {
 
   return (
     <header className="h-16 px-4 flex items-center justify-between select-none bg-black gap-4">
-      {/* LEFT: Window / Navigation Arrows */}
+      {/* LEFT: Window / Navigation Arrows + Brand */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setActiveNav("home")}
@@ -46,6 +46,18 @@ export default function Navbar() {
         >
           <ChevronRight className="w-5 h-5" />
         </button>
+
+        <div
+          onClick={() => setActiveNav("home")}
+          className="hidden md:flex items-center gap-2 ml-2 cursor-pointer group"
+        >
+          <span className="text-xs font-black tracking-wider text-white">
+            HELLO MUSIC
+          </span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-cyan-300 border border-white/15">
+            BEYOND IMAGINATION
+          </span>
+        </div>
       </div>
 
       {/* CENTER: Spotify Pill Controls (Home + Search Pill) */}

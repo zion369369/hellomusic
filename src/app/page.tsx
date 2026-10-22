@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import SongCard from "@/components/SongCard";
 import SpotifyQuickCard from "@/components/SpotifyQuickCard";
 import CosmosAestheticPanel from "@/components/CosmosAestheticPanel";
+import MusicBeyondImaginationHero from "@/components/MusicBeyondImaginationHero";
 import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
@@ -27,7 +28,12 @@ function MusicAppContent() {
     isLoadingSongs,
   } = usePlayer();
 
-  const categoryPills = ["All", "Escape to Cosmos", "Original"];
+  const categoryPills = [
+    "All",
+    "Beyond Imagination",
+    "Escape to Cosmos",
+    "Original",
+  ];
   const flyAwaySong = songs[0];
 
   return (
@@ -66,6 +72,11 @@ function MusicAppContent() {
               );
             })}
           </div>
+
+          {/* UPON OPENING SCREEN: ANIMATED GUIDED IMAGINATION ON FLY (THE USP) */}
+          {activeNav === "home" && !searchQuery.trim() && (
+            <MusicBeyondImaginationHero />
+          )}
 
           {/* Quick-Picks Row */}
           {activeNav === "home" && !searchQuery.trim() && (

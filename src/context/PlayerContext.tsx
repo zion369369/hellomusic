@@ -19,6 +19,7 @@ import {
   loginDemoUser,
   isSupabaseConfigured,
 } from "@/lib/supabase";
+import { setSpatialMode } from "@/lib/spatialAudio";
 
 interface PlayerContextType {
   // Current playback state
@@ -78,6 +79,16 @@ interface PlayerContextType {
   setIsFlightModalOpen: (open: boolean) => void;
   getAudioElement: () => HTMLAudioElement | null;
 
+  // Music Beyond Imagination / Guided Meditation state
+  imaginationPrompt: string;
+  setImaginationPrompt: (prompt: string) => void;
+  activeImaginationId: string;
+  setActiveImaginationId: (id: string) => void;
+  isBreathingGuideActive: boolean;
+  setIsBreathingGuideActive: (active: boolean) => void;
+  spatialSoundMode: "hrtf" | "binaural" | "stereo";
+  setSpatialSoundMode: (mode: "hrtf" | "binaural" | "stereo") => void;
+
   // User Auth
   currentUser: UserProfile | null;
   setCurrentUser: (u: UserProfile | null) => void;
@@ -112,6 +123,19 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState<boolean>(false);
   const [isFlightModalOpen, setIsFlightModalOpen] = useState<boolean>(false);
+
+  // Music Beyond Imagination / Guided Meditation state
+  const [imaginationPrompt, setImaginationPrompt] = useState<string>(
+    "Imagine you are flying above the Earth... Take a breath, why so serious?"
+  );
+  const [activeImaginationId, setActiveImaginationId] = useState<string>("flight");
+  const [isBreathingGuideActive, setIsBreathingGuideActive] = useState<boolean>(true);
+  const [spatialSoundMode, setSpatialSoundModeState] = useState<"hrtf" | "binaural" | "stereo">("hrtf");
+
+  const setSpatialSoundMode = (mode: "hrtf" | "binaural" | "stereo") => {
+    setSpatialSoundModeState(mode);
+    setSpatialMode(mode);
+  };
 
   // User profile
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -499,6 +523,14 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         isFlightModalOpen,
         setIsFlightModalOpen,
         getAudioElement: () => audioRef.current,
+        imaginationPrompt,
+        setImaginationPrompt,
+        activeImaginationId,
+        setActiveImaginationId,
+        isBreathingGuideActive,
+        setIsBreathingGuideActive,
+        spatialSoundMode,
+        setSpatialSoundMode,
         currentUser,
         setCurrentUser,
         loginUser,

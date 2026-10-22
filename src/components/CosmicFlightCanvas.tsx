@@ -31,15 +31,31 @@ export default function CosmicFlightCanvas({ isPlaying, onCameraChange }: Cosmic
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
+
+    const updateDimensions = () => {
+      if (!canvas) return;
+      const parent = canvas.parentElement;
+      const w = parent && parent.clientWidth > 0 ? parent.clientWidth : window.innerWidth;
+      const h = parent && parent.clientHeight > 0 ? parent.clientHeight : window.innerHeight;
+      width = canvas.width = w;
+      height = canvas.height = h;
+    };
+
+    updateDimensions();
 
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      updateDimensions();
     };
     window.addEventListener("resize", handleResize);
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateDimensions();
+    });
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
 
     // Initialize 3D Stars
     const STAR_COUNT = 900;
@@ -216,6 +232,7 @@ export default function CosmicFlightCanvas({ isPlaying, onCameraChange }: Cosmic
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
     };
   }, [isPlaying, onCameraChange]);
 
