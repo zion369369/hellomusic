@@ -26,12 +26,7 @@ function MusicAppContent() {
     isLoadingSongs,
   } = usePlayer();
 
-  const categoryPills = [
-    "All",
-    "Music Beyond Imagination",
-    "Escape to Cosmos",
-    "Original",
-  ];
+  const categoryPills = ["All", "Escape to Cosmos", "Original"];
   const flyAwaySong = songs[0];
 
   return (
@@ -41,7 +36,7 @@ function MusicAppContent() {
 
       {/* 2. MAIN 2-COLUMN VIEW (Card-in-card with 8px gaps like Spotify desktop) */}
       <div className="flex-1 flex gap-2 px-2 pb-2 min-h-0 overflow-hidden">
-        {/* LEFT SIDEBAR: Your Imagination */}
+        {/* LEFT SIDEBAR: Your Library */}
         <Sidebar />
 
         {/* MAIN CANVAS */}
@@ -98,7 +93,7 @@ function MusicAppContent() {
             </div>
           )}
 
-          {/* MAIN SHOWCASE: SONG ON THE LEFT + GUIDED IMAGINATION & PHILOSOPHY ON THE RIGHT */}
+          {/* MAIN SHOWCASE: SONG ON THE LEFT + DEEP AESTHETIC COSMOS ON THE RIGHT */}
           {activeNav === "home" && !searchQuery.trim() && flyAwaySong ? (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
@@ -119,7 +114,7 @@ function MusicAppContent() {
                   <SongCard song={flyAwaySong} />
                 </div>
 
-                {/* RIGHT SIDE OF THE SONG: Guided Imagination & Philosophical Flight Panel */}
+                {/* RIGHT SIDE OF THE SONG: Deep Aesthetic Cosmos Quotes */}
                 <div className="lg:col-span-7 flex flex-col justify-stretch">
                   <CosmosAestheticPanel />
                 </div>

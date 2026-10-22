@@ -4,82 +4,69 @@ import React, { useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import {
   Sparkles,
-  Plus,
-  ArrowRight,
   Search,
   Heart,
   Volume2,
-  Moon,
-  Sun,
-  Globe,
-  Compass,
-  Wind,
-  BookOpen,
+  ArrowRight,
 } from "lucide-react";
 
-interface ImaginationJourney {
+interface CelestialJourney {
   id: string;
   title: string;
-  prompt: string;
   subtitle: string;
   tag: string;
-  iconType: "moon" | "venus" | "jupiter" | "sun" | "cosmos" | "philosophy";
+  code: string;
 }
 
-export const IMAGINATION_JOURNEYS: ImaginationJourney[] = [
+export const CELESTIAL_JOURNEYS: CelestialJourney[] = [
   {
     id: "moon",
     title: "The Moon",
-    prompt:
-      "Imagine ascending silently through lunar gravity. There is no air, no friction, only eternal stillness. All worldly weight dissolves.",
-    subtitle: "Lunar Serenity • 384,400 KM",
-    tag: "Destination",
-    iconType: "moon",
+    subtitle: "Sea of Tranquility • 384,400 KM",
+    tag: "Celestial",
+    code: "MOON",
   },
   {
     id: "venus",
     title: "Venus",
-    prompt:
-      "Soaring above the morning star. You drift weightless through high golden clouds of light, suspended between night and dawn.",
-    subtitle: "Morning Star • 41.4M KM",
-    tag: "Destination",
-    iconType: "venus",
+    subtitle: "Amber Shroud • 61,000,000 KM",
+    tag: "Celestial",
+    code: "VENUS",
   },
   {
     id: "jupiter",
     title: "Jupiter",
-    prompt:
-      "Gliding high above the great orbital bands. You are a solitary speck in the presence of vast cosmic majesty, yet completely at peace.",
-    subtitle: "Gas Giant • 628.7M KM",
-    tag: "Destination",
-    iconType: "jupiter",
+    subtitle: "Colossal Bands • 628,700,000 KM",
+    tag: "Celestial",
+    code: "JUPITER",
+  },
+  {
+    id: "saturn",
+    title: "Saturn",
+    subtitle: "Ice Rings • 1,400,000,000 KM",
+    tag: "Celestial",
+    code: "SATURN",
   },
   {
     id: "sun",
     title: "The Sun",
-    prompt:
-      "Basking in pure primordial light. Every atom within your consciousness originated in stellar fire. You are light returning to light.",
-    subtitle: "Solar Radiance • 149.6M KM",
-    tag: "Destination",
-    iconType: "sun",
+    subtitle: "Solar Corona • 149,600,000 KM",
+    tag: "Celestial",
+    code: "SUN",
   },
   {
-    id: "cosmos",
+    id: "deep-cosmos",
     title: "Deep Cosmos",
-    prompt:
-      "Drifting beyond all planetary bounds into the starlight void. Once you have learned to fly in your mind, the universe is no longer the limit.",
-    subtitle: "Beyond Horizons • Infinite Reach",
-    tag: "Destination",
-    iconType: "cosmos",
+    subtitle: "Interstellar Horizon • Infinity",
+    tag: "Philosophy",
+    code: "VOID",
   },
   {
-    id: "philosophy",
-    title: "Philosophy of Flight",
-    prompt:
-      "The light dove, cleaving the air in her free flight, and feeling its resistance, might imagine that its flight would be still easier in empty space.",
-    subtitle: "Kant, Nietzsche & Plato",
+    id: "kant-nietzsche",
+    title: "Kant & Nietzsche",
+    subtitle: "The Light Dove & High Soar",
     tag: "Philosophy",
-    iconType: "philosophy",
+    code: "PHIL",
   },
 ];
 
@@ -91,62 +78,35 @@ export default function Sidebar() {
     playSong,
     activeNav,
     setActiveNav,
-    imaginationPrompt,
-    setImaginationPrompt,
-    activeImaginationId,
-    setActiveImaginationId,
   } = usePlayer();
 
-  const [imaginationFilter, setImaginationFilter] = useState<string>("All");
-  const [imaginationSearch, setImaginationSearch] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>("All");
+  const [searchFilter, setSearchFilter] = useState<string>("");
 
   const likedCount = songs.filter((s) => s.is_liked).length;
   const flyAwaySong = songs[0];
 
-  const filteredJourneys = IMAGINATION_JOURNEYS.filter((journey) => {
-    if (imaginationFilter === "Destinations" && journey.tag !== "Destination")
-      return false;
-    if (imaginationFilter === "Philosophy" && journey.tag !== "Philosophy")
-      return false;
-    if (imaginationSearch.trim()) {
+  const filteredJourneys = CELESTIAL_JOURNEYS.filter((journey) => {
+    if (activeTab === "Celestial" && journey.tag !== "Celestial") return false;
+    if (activeTab === "Philosophy" && journey.tag !== "Philosophy") return false;
+    if (searchFilter.trim()) {
       return (
-        journey.title.toLowerCase().includes(imaginationSearch.toLowerCase()) ||
-        journey.prompt.toLowerCase().includes(imaginationSearch.toLowerCase())
+        journey.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+        journey.subtitle.toLowerCase().includes(searchFilter.toLowerCase())
       );
     }
     return true;
   });
 
-  const handleSelectJourney = (journey: ImaginationJourney) => {
-    setActiveImaginationId(journey.id);
-    setImaginationPrompt(journey.prompt);
+  const handleSelectJourney = () => {
     setActiveNav("home");
     if (!isPlaying && flyAwaySong) {
       playSong(flyAwaySong);
     }
   };
 
-  const renderIcon = (type: ImaginationJourney["iconType"]) => {
-    switch (type) {
-      case "moon":
-        return <Moon className="w-4 h-4 text-zinc-300" />;
-      case "venus":
-        return <Sparkles className="w-4 h-4 text-zinc-300" />;
-      case "jupiter":
-        return <Globe className="w-4 h-4 text-zinc-300" />;
-      case "sun":
-        return <Sun className="w-4 h-4 text-zinc-300" />;
-      case "cosmos":
-        return <Compass className="w-4 h-4 text-zinc-300" />;
-      case "philosophy":
-        return <BookOpen className="w-4 h-4 text-zinc-300" />;
-      default:
-        return <Compass className="w-4 h-4 text-zinc-300" />;
-    }
-  };
-
   return (
-    <aside className="w-[300px] lg:w-[320px] flex-shrink-0 bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl">
+    <aside className="w-[300px] lg:w-[330px] flex-shrink-0 bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl">
       {/* Header: Your Imagination */}
       <div className="p-4 pb-2">
         <div className="flex items-center justify-between text-[#b3b3b3]">
@@ -154,14 +114,14 @@ export default function Sidebar() {
             onClick={() => setActiveNav("home")}
             className="flex items-center gap-2.5 hover:text-white transition group text-left"
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center shadow">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-700 to-black border border-white/20 flex items-center justify-center shadow">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="font-bold text-sm tracking-tight text-white group-hover:text-zinc-200 block">
+              <span className="font-extrabold text-sm tracking-tight text-white group-hover:text-zinc-200 block">
                 Your Imagination
               </span>
-              <span className="text-[10px] font-mono tracking-widest text-zinc-500 block -mt-0.5 uppercase">
+              <span className="text-[10px] font-mono tracking-widest text-zinc-400 block -mt-0.5 uppercase">
                 Music Beyond Imagination
               </span>
             </div>
@@ -169,54 +129,36 @@ export default function Sidebar() {
 
           <div className="flex items-center gap-1">
             <button
-              onClick={() => {
-                const custom = window.prompt(
-                  "Where does your mind want to fly? (e.g. Orbiting Saturn's rings):",
-                  imaginationPrompt
-                );
-                if (custom && custom.trim()) {
-                  setImaginationPrompt(custom.trim());
-                  setActiveImaginationId("custom");
-                  setActiveNav("home");
-                  if (!isPlaying && flyAwaySong) playSong(flyAwaySong);
-                }
-              }}
-              className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition text-zinc-400"
-              title="Add Custom Destination"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-            <button
               onClick={() => setActiveNav("home")}
               className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition text-zinc-400"
-              title="Focus Panel"
+              title="Focus Horizon"
             >
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Apple Native Subtitle Pill */}
-        <div className="mt-2.5 px-2.5 py-1.5 rounded bg-[#18181b] border border-white/5 text-[10px] text-zinc-400 font-mono flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-zinc-300">
-            <Wind className="w-3 h-3 text-zinc-400" />
-            <span>Guided Meditation Engine</span>
+        {/* Tagline Badge */}
+        <div className="mt-2.5 px-2.5 py-1.5 rounded-md bg-[#18181b] border border-white/10 text-[10px] text-zinc-300 font-mono flex items-center justify-between">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span>Guided Meditation</span>
           </span>
-          <span className="text-zinc-500 font-medium">ZION</span>
+          <span className="text-zinc-400 font-bold">ZION</span>
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Pills (No emojis, Apple Native) */}
         <div className="flex items-center gap-1.5 mt-3 overflow-x-auto no-scrollbar">
-          {["All", "Destinations", "Philosophy", "Liked"].map((pill) => (
+          {["All", "Celestial", "Philosophy", "Liked"].map((pill) => (
             <button
               key={pill}
               onClick={() => {
-                setImaginationFilter(pill);
+                setActiveTab(pill);
                 if (pill === "Liked") setActiveNav("liked");
                 else setActiveNav("home");
               }}
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-                imaginationFilter === pill
+                activeTab === pill
                   ? "bg-white text-black font-bold shadow"
                   : "bg-[#242424] text-white hover:bg-[#2a2a2a]"
               }`}
@@ -233,63 +175,42 @@ export default function Sidebar() {
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
-            value={imaginationSearch}
-            onChange={(e) => setImaginationSearch(e.target.value)}
-            placeholder="Search Destinations..."
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            placeholder="Search Your Imagination..."
             className="w-full bg-[#1c1c1c] text-white placeholder-zinc-500 text-[11px] pl-8 pr-2 py-1 rounded-md border-none focus:outline-none focus:ring-1 focus:ring-zinc-700"
           />
         </div>
       </div>
 
-      {/* List: Guided Imagination Destinations & Audio */}
+      {/* List: Celestial Destinations & Original Soundtrack */}
       <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-4">
-        {filteredJourneys.map((journey) => {
-          const isActive = activeImaginationId === journey.id;
-          return (
-            <div
-              key={journey.id}
-              onClick={() => handleSelectJourney(journey)}
-              className={`flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition group border ${
-                isActive
-                  ? "bg-white/10 border-white/20 shadow-sm"
-                  : "border-transparent hover:bg-[#1a1a1a]"
-              }`}
-            >
-              <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow ${
-                  isActive
-                    ? "bg-white text-black"
-                    : "bg-[#18181b] border border-white/5"
-                }`}
-              >
-                {renderIcon(journey.iconType)}
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-1">
-                  <p
-                    className={`text-xs sm:text-sm font-semibold truncate ${
-                      isActive ? "text-white font-bold" : "text-zinc-200 group-hover:text-white"
-                    }`}
-                  >
-                    {journey.title}
-                  </p>
-                  {isActive && isPlaying && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  )}
-                </div>
-                <p className="text-[11px] text-zinc-400 truncate mt-0.5">
-                  {journey.subtitle}
-                </p>
-              </div>
+        {/* Curated Celestial Destinations */}
+        {filteredJourneys.map((journey) => (
+          <div
+            key={journey.id}
+            onClick={handleSelectJourney}
+            className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition group border border-transparent hover:bg-[#1a1a1a] hover:border-white/10"
+          >
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-mono font-bold bg-[#1f1f1f] border border-white/10 text-zinc-300 group-hover:border-white/30 group-hover:text-white shadow">
+              {journey.code}
             </div>
-          );
-        })}
+
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-semibold truncate text-zinc-200 group-hover:text-white">
+                {journey.title}
+              </p>
+              <p className="text-[11px] text-zinc-500 truncate mt-0.5">
+                {journey.subtitle}
+              </p>
+            </div>
+          </div>
+        ))}
 
         {/* Separator */}
         <div className="my-2 border-t border-zinc-800/80 px-2 pt-2">
           <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
-            Original Master Track
+            Original Soundtrack
           </span>
         </div>
 
@@ -302,20 +223,20 @@ export default function Sidebar() {
               : "border-transparent hover:bg-[#1a1a1a]"
           }`}
         >
-          <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center flex-shrink-0 shadow">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-zinc-700 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
             <Heart className="w-4 h-4 fill-white text-white" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs sm:text-sm font-semibold text-white truncate">
               Liked Journeys
             </p>
-            <p className="text-[11px] text-zinc-400 truncate">
-              {likedCount} {likedCount === 1 ? "saved" : "saved"}
+            <p className="text-[11px] text-zinc-500 truncate">
+              {likedCount} {likedCount === 1 ? "saved item" : "saved items"}
             </p>
           </div>
         </div>
 
-        {/* ZION — Fly away Song */}
+        {/* ZION — Fly away Original Soundtrack */}
         {songs.map((song) => {
           const isCurrentActive = currentSong?.id === song.id;
           return (
@@ -352,10 +273,10 @@ export default function Sidebar() {
                 >
                   {song.title}
                 </p>
-                <p className="text-[11px] text-zinc-400 truncate flex items-center gap-1">
+                <p className="text-[11px] text-zinc-500 truncate flex items-center gap-1">
                   <span>{song.artist}</span>
                   <span>•</span>
-                  <span>Lossless Audio</span>
+                  <span>Original Master</span>
                 </p>
               </div>
             </div>

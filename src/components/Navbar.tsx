@@ -99,8 +99,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* RIGHT: Publish Button, Notifications, Profile */}
+      {/* RIGHT: Flight Mode, Publish Button, Notifications, Profile */}
       <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* Guided Imagination Status Indicator */}
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/10 text-zinc-300 font-mono text-[11px] shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span>GUIDED IMAGINATION</span>
+        </div>
+
         {/* Publish Action Button */}
         <button
           onClick={() => setIsPublishModalOpen(true)}
