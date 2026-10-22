@@ -202,8 +202,8 @@ function MusicAppContent() {
             mobileTab === "cosmos" ? "flex" : "hidden md:flex"
           } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3 sm:p-6 pb-36 md:pb-8 relative border border-zinc-900/60 shadow-xl touch-scroll`}
         >
-          {/* Category Chips Bar */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6 sticky top-0 pt-2 pb-3 bg-[#121212]/95 backdrop-blur-md z-10 overflow-x-auto no-scrollbar">
+          {/* Category Chips Bar (100% opaque bg-[#121212] so scrolled items never peek through) */}
+          <div className="flex items-center gap-2 mb-3 sm:mb-5 sticky top-0 pt-2 pb-2.5 bg-[#121212] z-20 overflow-x-auto no-scrollbar">
             {categoryPills.map((pill) => {
               const isActive =
                 (pill === "All" && (selectedGenre === "All" || !selectedGenre)) ||
@@ -232,18 +232,18 @@ function MusicAppContent() {
             })}
           </div>
 
-          {/* Quick-Picks Row */}
+          {/* Quick-Picks Row (Desktop/Tablet clean secondary bar) */}
           {activeNav === "home" && !searchQuery.trim() && (
-            <div className="mb-4 sm:mb-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
+            <div className="hidden sm:block mb-4 sm:mb-5">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
                 {/* Liked Songs Quick Card */}
                 <div
                   onClick={() => setActiveNav("liked")}
                   className="group flex items-center justify-between bg-[#242424]/70 hover:bg-[#2e2e2e] rounded overflow-hidden cursor-pointer transition-all duration-200 select-none shadow-sm"
                 >
                   <div className="flex items-center gap-3 min-w-0 pr-2">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 bg-gradient-to-br from-zinc-700 to-black flex items-center justify-center shadow">
-                      <Heart className="w-6 h-6 fill-white text-white" />
+                    <div className="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-zinc-700 to-black flex items-center justify-center shadow">
+                      <Heart className="w-5 h-5 fill-white text-white" />
                     </div>
                     <span className="font-bold text-xs sm:text-sm text-white truncate">
                       Liked Songs
@@ -259,34 +259,10 @@ function MusicAppContent() {
             </div>
           )}
 
-          {/* MAIN SHOWCASE: SONG ON THE LEFT + DEEP AESTHETIC COSMOS ON THE RIGHT */}
+          {/* MAIN UNIFIED CENTRAL SHOWCASE: ONE SCREEN EXPERIENCE */}
           {activeNav === "home" && !searchQuery.trim() && flyAwaySong ? (
-            <div className="mb-6 sm:mb-8">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg sm:text-2xl font-bold text-white tracking-tight">
-                    {selectedGenre === "Original"
-                      ? "Original Track"
-                      : "Escape to Cosmos"}
-                  </h2>
-                  <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                    {selectedGenre === "Original" ? "ORIGINAL MASTER" : "ZION"}
-                  </span>
-                </div>
-              </div>
-
-              {/* 2-Column Showcase on Desktop / Stacked with ergonomics on Phone */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
-                {/* LEFT: Spotify Song Card */}
-                <div className="lg:col-span-5 max-w-md w-full mx-auto lg:mx-0">
-                  <SongCard song={flyAwaySong} />
-                </div>
-
-                {/* RIGHT SIDE OF THE SONG: Deep Aesthetic Cosmos Quotes & 30s Meditation */}
-                <div className="lg:col-span-7 flex flex-col justify-stretch">
-                  <CosmosAestheticPanel />
-                </div>
-              </div>
+            <div className="mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
+              <CosmosAestheticPanel />
             </div>
           ) : (
             /* Search or Filtered View */
@@ -302,13 +278,10 @@ function MusicAppContent() {
                   <Disc3 className="w-8 h-8 animate-spin text-white" />
                 </div>
               ) : filteredSongs.length > 0 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
-                  <div className="lg:col-span-5 max-w-md w-full mx-auto lg:mx-0">
-                    <SongCard song={filteredSongs[0]} />
-                  </div>
-                  <div className="lg:col-span-7 flex flex-col justify-stretch">
-                    <CosmosAestheticPanel />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {filteredSongs.map((song) => (
+                    <SongCard key={song.id} song={song} />
+                  ))}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-zinc-800 rounded-lg p-6 bg-[#181818]/60">

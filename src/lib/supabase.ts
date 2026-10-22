@@ -77,7 +77,14 @@ function getLocalSongs(): Song[] {
       localStorage.setItem(LOCAL_STORAGE_SONGS_KEY, JSON.stringify(merged));
       return merged;
     } else {
-      parsed[index] = { ...parsed[index], genre: INITIAL_SONGS[0].genre };
+      const currentLikes = parsed[index].likes_count > 50 ? INITIAL_SONGS[0].likes_count : parsed[index].likes_count;
+      const currentViews = parsed[index].views_count > 500 ? INITIAL_SONGS[0].views_count : parsed[index].views_count;
+      parsed[index] = {
+        ...parsed[index],
+        genre: INITIAL_SONGS[0].genre,
+        views_count: currentViews,
+        likes_count: currentLikes,
+      };
       localStorage.setItem(LOCAL_STORAGE_SONGS_KEY, JSON.stringify(parsed));
       return parsed;
     }
