@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="100%" stop-color="#050505" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#g2)" />
+  <circle cx="400" cy="380" r="220" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.2" />
+  <circle cx="340" cy="380" r="140" fill="#ffffff" />
+  <circle cx="390" cy="380" r="135" fill="#09090b" />
+  <circle cx="340" cy="380" r="140" fill="none" stroke="#ffffff" stroke-width="2" />
+  
+  <text x="70" y="80" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" letter-spacing="4" fill="#a1a1aa">HELLO MUSIC // 003</text>
+  <text x="730" y="80" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="800" letter-spacing="3" fill="#ffffff">AMBIENT MIX</text>
+
+  <g transform="translate(70, 620)">
+    <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="800" letter-spacing="4" fill="#a1a1aa">SLOWED &amp; REVERB</text>
+    <text x="0" y="55" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="52" font-weight="900" letter-spacing="-1" fill="#ffffff">FLY AWAY</text>
+    <text x="0" y="98" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="700" letter-spacing="4" fill="#d4d4d8">ARTIST: ZION</text>
+  </g>
+</svg>
