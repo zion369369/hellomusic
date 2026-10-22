@@ -74,13 +74,13 @@ export default function Sidebar() {
 
         {/* Tagline Pill */}
         <div className="mt-2.5 px-2.5 py-1 rounded bg-[#1c1c1c] text-[10px] text-zinc-400 font-medium flex items-center justify-between">
-          <span className="tracking-wide text-zinc-300">A different world of music</span>
-          <span className="text-[9px] font-mono text-zinc-500">ZION ONLY</span>
+          <span className="tracking-wide text-zinc-300">Escape to Cosmos</span>
+          <span className="text-[9px] font-mono text-zinc-400">ZION</span>
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar">
-          {["All", "Playlists", "ZION", "Liked"].map((pill) => (
+          {["All", "Escape to Cosmos", "Liked"].map((pill) => (
             <button
               key={pill}
               onClick={() => {
