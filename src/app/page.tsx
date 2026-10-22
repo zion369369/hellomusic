@@ -10,13 +10,14 @@ import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
 import AuthModal from "@/components/AuthModal";
-import { Music, Disc3 } from "lucide-react";
+import { Music, Disc3, Heart } from "lucide-react";
 
 function MusicAppContent() {
   const {
     filteredSongs,
     songs,
     activeNav,
+    setActiveNav,
     searchQuery,
     selectedGenre,
     setSelectedGenre,
@@ -24,7 +25,7 @@ function MusicAppContent() {
     isLoadingSongs,
   } = usePlayer();
 
-  const categoryPills = ["All", "ZION Originals", "Remixes", "Ambient", "VIP Radio"];
+  const categoryPills = ["All", "Originals", "Underrated"];
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-black text-white font-sans select-none">
@@ -43,13 +44,13 @@ function MusicAppContent() {
             {categoryPills.map((pill) => {
               const isActive =
                 (pill === "All" && selectedGenre === "All") ||
-                (pill !== "All" && selectedGenre.toLowerCase().includes(pill.toLowerCase().replace("zion ", "")));
+                (pill !== "All" && selectedGenre.toLowerCase().includes(pill.toLowerCase()));
               return (
                 <button
                   key={pill}
                   onClick={() => {
                     if (pill === "All") setSelectedGenre("All");
-                    else setSelectedGenre(pill.replace("ZION ", ""));
+                    else setSelectedGenre(pill);
                   }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${
                     isActive
@@ -63,18 +64,34 @@ function MusicAppContent() {
             })}
           </div>
 
-          {/* Quick-Picks 2x4 Grid (Featured on Home when not searching) */}
+          {/* Quick-Picks Grid */}
           {activeNav === "home" && !searchQuery.trim() && (
             <div className="mb-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                {songs.slice(0, 8).map((song) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                {/* Liked Songs Quick Card */}
+                <div
+                  onClick={() => setActiveNav("liked")}
+                  className="group flex items-center justify-between bg-[#242424]/70 hover:bg-[#2e2e2e] rounded overflow-hidden cursor-pointer transition-all duration-200 select-none shadow-sm"
+                >
+                  <div className="flex items-center gap-3 min-w-0 pr-2">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 bg-gradient-to-br from-zinc-700 to-black flex items-center justify-center shadow">
+                      <Heart className="w-6 h-6 fill-white text-white" />
+                    </div>
+                    <span className="font-bold text-xs sm:text-sm text-white truncate">
+                      Liked Songs
+                    </span>
+                  </div>
+                </div>
+
+                {/* Song Quick Cards */}
+                {songs.map((song) => (
                   <SpotifyQuickCard key={`quick-${song.id}`} song={song} />
                 ))}
               </div>
             </div>
           )}
 
-          {/* SECTION 1: "Jump back in" */}
+          {/* SECTION: "Jump back in" */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight hover:underline cursor-pointer">
@@ -104,7 +121,7 @@ function MusicAppContent() {
                 <h3 className="text-sm font-bold text-white mb-1">No tracks found</h3>
                 <p className="text-xs text-[#a7a7a7] max-w-sm mb-4">
                   {searchQuery
-                    ? `No ZION tracks match "${searchQuery}". Try searching for Fly away or Ure Jao.`
+                    ? `No tracks match "${searchQuery}".`
                     : "No songs in this view yet."}
                 </p>
                 <button
@@ -117,36 +134,10 @@ function MusicAppContent() {
             )}
           </div>
 
-          {/* SECTION 2: "More of what you like" (ZION Curated) */}
-          {activeNav === "home" && !searchQuery.trim() && (
-            <div className="mb-10">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight hover:underline cursor-pointer">
-                    More of what you like
-                  </h2>
-                  <p className="text-xs text-[#a7a7a7]">Handpicked ZION master cuts &amp; soundscapes.</p>
-                </div>
-                <button
-                  onClick={() => setIsPublishModalOpen(true)}
-                  className="text-xs font-bold text-[#b3b3b3] hover:underline hover:text-white"
-                >
-                  Show all
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                {songs.map((song) => (
-                  <SongCard key={`more-${song.id}`} song={song} />
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Footer Info / Spotify-style legal & tagline */}
           <div className="pt-10 pb-6 border-t border-zinc-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#727272]">
             <div>
-              <p className="font-semibold text-zinc-400">HELLO MUSIC // ZION EDITION</p>
+              <p className="font-semibold text-zinc-400">HELLO MUSIC // ZION EXCLUSIVE</p>
               <p className="text-[11px] mt-0.5">&ldquo;A different world of music. Underrated songs only......&rdquo;</p>
             </div>
             <div className="flex items-center gap-4">

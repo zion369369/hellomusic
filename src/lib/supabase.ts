@@ -5,7 +5,7 @@ import { INITIAL_SONGS } from "./initialData";
 const SUPABASE_URL_DEFAULT = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const SUPABASE_ANON_KEY_DEFAULT = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-const LOCAL_STORAGE_SONGS_KEY = "hellomusic_songs_v2";
+const LOCAL_STORAGE_SONGS_KEY = "hellomusic_songs_v3";
 const LOCAL_STORAGE_LIKES_KEY = "hellomusic_likes_v1";
 const LOCAL_STORAGE_USER_KEY = "hellomusic_user_v1";
 const LOCAL_STORAGE_SUPABASE_CONFIG = "hellomusic_supabase_config";
