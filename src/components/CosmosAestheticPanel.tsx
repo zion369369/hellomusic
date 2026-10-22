@@ -50,24 +50,37 @@ export default function CosmosAestheticPanel() {
       </div>
 
       {/* Middle: Deep Poetic Typography */}
-      <div className="relative z-10 space-y-6 flex-1 flex flex-col justify-center my-2">
+      <div className="relative z-10 space-y-4 sm:space-y-5 flex-1 flex flex-col justify-center my-2">
+        {/* Quote 0: Want to fly? */}
+        <div className="group/quote pl-4 border-l-2 border-white/70 hover:border-white transition-colors duration-300">
+          <p className="text-xs sm:text-sm font-bold tracking-wider uppercase text-zinc-300 mb-1">
+            Want to fly?
+          </p>
+          <p className="text-xs sm:text-sm font-light italic text-zinc-400 leading-relaxed">
+            It always starts with imagination.
+          </p>
+          <p className="text-xs sm:text-sm font-medium text-white mt-1 leading-relaxed">
+            And once you&apos;ve learned to fly in your mind, even the universe is no longer the limit. 🪽
+          </p>
+        </div>
+
         {/* Quote 1 */}
         <div className="group/quote pl-4 border-l-2 border-zinc-700/60 hover:border-white transition-colors duration-300">
-          <p className="text-sm sm:text-base font-light italic text-zinc-300 tracking-wide leading-relaxed group-hover/quote:text-white transition-colors">
+          <p className="text-xs sm:text-sm font-light italic text-zinc-300 tracking-wide leading-relaxed group-hover/quote:text-white transition-colors">
             &ldquo;The light dove, cleaving in the air&rdquo;
           </p>
         </div>
 
         {/* Quote 2 */}
         <div className="group/quote pl-4 border-l-2 border-zinc-700/60 hover:border-white transition-colors duration-300">
-          <p className="text-sm sm:text-base font-normal italic text-zinc-200 tracking-wide leading-relaxed group-hover/quote:text-white transition-colors">
+          <p className="text-xs sm:text-sm font-normal italic text-zinc-200 tracking-wide leading-relaxed group-hover/quote:text-white transition-colors">
             &ldquo;The higher we soar, the smaller we appear to those who cannot fly.&rdquo;
           </p>
         </div>
 
         {/* Quote 3 (The Climactic Universe Reflection) */}
-        <div className="group/quote pl-4 border-l-2 border-white/80 bg-white/[0.02] p-4 rounded-r-xl transition-all">
-          <p className="text-sm sm:text-[15px] font-medium text-white tracking-wide leading-relaxed">
+        <div className="group/quote pl-4 border-l-2 border-white/80 bg-white/[0.02] p-3.5 rounded-r-xl transition-all">
+          <p className="text-xs sm:text-sm font-medium text-white tracking-wide leading-relaxed">
             I asked the universe why we cannot fly? she whispered,{" "}
             <span className="font-bold underline decoration-white/40 underline-offset-4 text-white">
               &ldquo;the cosmos is soaring with you.&rdquo;
