@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePlayer } from "@/context/PlayerContext";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, RotateCcw } from "lucide-react";
 
 interface CelestialScience {
   id: string;
@@ -63,39 +63,6 @@ const CELESTIAL_DATA: CelestialScience[] = [
   },
 ];
 
-const MEDITATION_STEPS = [
-  {
-    phase: "Somatic Grounding",
-    action: "RELEASE",
-    instruction:
-      "Drop your shoulders away from your ears. Unclench your jaw and soften the muscles around your eyes. Feel the weight you carry dissolve.",
-  },
-  {
-    phase: "Diaphragmatic Inhale",
-    action: "INHALE (4s)",
-    instruction:
-      "Inhale slowly through the nose... feel your ribcage expand in all directions. Draw in the quiet clarity of open space.",
-  },
-  {
-    phase: "Suspended Stillness",
-    action: "HOLD (4s)",
-    instruction:
-      "Hold the breath gently at the peak. Do not strain. Notice the stillness between thoughts — calm, weightless, untouched.",
-  },
-  {
-    phase: "Complete Release",
-    action: "EXHALE (4s)",
-    instruction:
-      "Exhale smoothly through the mouth, emptying the lungs completely. Let gravity let go of you.",
-  },
-  {
-    phase: "Orbital Consciousness",
-    action: "SOAR",
-    instruction:
-      "Now allow your awareness to rise. Look down upon the curvature of the Earth. You are the quiet expanse in which the music resonates.",
-  },
-];
-
 const PHILOSOPHY_QUOTES = [
   {
     quote:
@@ -143,33 +110,92 @@ export default function CosmosAestheticPanel() {
   const isFlyAwayPlaying = isFlyAwayActive && isPlaying;
 
   const [activeTab, setActiveTab] = useState<
-    "meditation" | "celestial" | "philosophy"
-  >("meditation");
+    "breathing" | "celestial" | "philosophy"
+  >("breathing");
 
   const [selectedDestId, setSelectedDestId] = useState<string>("moon");
-  const [meditationIndex, setMeditationIndex] = useState<number>(0);
   const [philosophyIndex, setPhilosophyIndex] = useState<number>(0);
+  const [isSoftFading, setIsSoftFading] = useState<boolean>(false);
+
+  // 30-Second Breath Reset State
+  const [breathSecondsLeft, setBreathSecondsLeft] = useState<number>(30);
+  const [isBreathActive, setIsBreathActive] = useState<boolean>(true);
 
   const currentDest =
     CELESTIAL_DATA.find((d) => d.id === selectedDestId) || CELESTIAL_DATA[0];
 
-  // Auto-advance meditation steps smoothly
+  // 30-Second Breath Countdown & Phases (10s per cycle x 3 cycles = 30s total)
   useEffect(() => {
-    if (activeTab !== "meditation") return;
+    if (!isBreathActive) return;
+
+    const interval = setInterval(() => {
+      setBreathSecondsLeft((prev) => {
+        if (prev <= 1) {
+          setIsBreathActive(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isBreathActive]);
+
+  const restartBreathReset = () => {
+    setBreathSecondsLeft(30);
+    setIsBreathActive(true);
+  };
+
+  // Determine current 10s cycle phase inside 30-second reset
+  // Cycle timing within each 10s: 0-4s Inhale, 4-6s Hold, 6-10s Exhale
+  const elapsed = 30 - breathSecondsLeft;
+  const cycleSeconds = elapsed % 10;
+  const cycleNumber = Math.min(3, Math.floor(elapsed / 10) + 1);
+
+  let breathPhaseText = "Inhale";
+  let breathInstruction =
+    "Inhale slowly through the nose... expanding your chest with calm clarity.";
+  if (cycleSeconds >= 4 && cycleSeconds < 6) {
+    breathPhaseText = "Hold";
+    breathInstruction =
+      "Hold the breath gently in stillness. Feel the quiet between thoughts.";
+  } else if (cycleSeconds >= 6) {
+    breathPhaseText = "Exhale";
+    breathInstruction =
+      "Exhale smoothly and completely. Releasing all gravity and weight.";
+  }
+
+  // Soft slow auto-advance for Philosophy quotes (gentle cross-fade every 10 seconds)
+  const isFadingRef = useRef(false);
+  useEffect(() => {
+    if (activeTab !== "philosophy") return;
+
     const timer = setInterval(() => {
-      setMeditationIndex((prev) => (prev + 1) % MEDITATION_STEPS.length);
-    }, 6000);
+      if (isFadingRef.current) return;
+      isFadingRef.current = true;
+      setIsSoftFading(true);
+
+      setTimeout(() => {
+        setPhilosophyIndex((prev) => (prev + 1) % PHILOSOPHY_QUOTES.length);
+        setIsSoftFading(false);
+        isFadingRef.current = false;
+      }, 700);
+    }, 10000);
+
     return () => clearInterval(timer);
   }, [activeTab]);
 
-  // Auto-advance philosophy quotes smoothly
-  useEffect(() => {
-    if (activeTab !== "philosophy") return;
-    const timer = setInterval(() => {
-      setPhilosophyIndex((prev) => (prev + 1) % PHILOSOPHY_QUOTES.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [activeTab]);
+  const handleSelectDest = (id: string) => {
+    setIsSoftFading(true);
+    setTimeout(() => {
+      setSelectedDestId(id);
+      setIsSoftFading(false);
+    }, 400);
+
+    if (!isFlyAwayPlaying && flyAwaySong) {
+      playSong(flyAwaySong);
+    }
+  };
 
   const handlePlayToggle = () => {
     if (isFlyAwayActive) {
@@ -179,19 +205,11 @@ export default function CosmosAestheticPanel() {
     }
   };
 
-  const handleSelectDest = (id: string) => {
-    setSelectedDestId(id);
-    if (!isFlyAwayPlaying && flyAwaySong) {
-      playSong(flyAwaySong);
-    }
-  };
-
-  const currentMeditation = MEDITATION_STEPS[meditationIndex];
   const currentPhilosophy = PHILOSOPHY_QUOTES[philosophyIndex];
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-[#101012] border border-white/10 p-6 sm:p-8 flex flex-col justify-between shadow-2xl select-none transition-all duration-300 hover:border-white/20 h-full">
-      {/* 1. Header: Pure Minimalist Typography (No AI Sparkle Icons) */}
+      {/* 1. Header: Pure Minimalist Typography */}
       <div className="relative z-10 space-y-4">
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <span className="text-[11px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
@@ -201,7 +219,7 @@ export default function CosmosAestheticPanel() {
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse" />
             <span className="text-[11px] font-mono text-zinc-400 uppercase">
-              {isFlyAwayPlaying ? "Spatial Audio Active" : "Guided Meditation"}
+              {isFlyAwayPlaying ? "Spatial Audio Active" : "30s Breath Reset"}
             </span>
           </div>
         </div>
@@ -209,14 +227,14 @@ export default function CosmosAestheticPanel() {
         {/* 2. Apple-Style Segmented Control */}
         <div className="grid grid-cols-3 p-1 rounded-xl bg-black/60 border border-white/10 text-xs">
           <button
-            onClick={() => setActiveTab("meditation")}
+            onClick={() => setActiveTab("breathing")}
             className={`py-2 rounded-lg font-medium transition-all text-center ${
-              activeTab === "meditation"
+              activeTab === "breathing"
                 ? "bg-white text-black font-semibold shadow-sm"
                 : "text-zinc-400 hover:text-white"
             }`}
           >
-            Meditation
+            30s Breath
           </button>
           <button
             onClick={() => setActiveTab("celestial")}
@@ -242,45 +260,57 @@ export default function CosmosAestheticPanel() {
 
         {/* 3. Dynamic Center Showcase */}
         <div className="py-2 min-h-[190px] flex flex-col justify-center">
-          {/* TAB 1: PROFESSIONAL GUIDED MEDITATION */}
-          {activeTab === "meditation" && (
-            <div className="space-y-3">
+          {/* TAB 1: 30-SECOND BREATH RESET */}
+          {activeTab === "breathing" && (
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
-                  {currentMeditation.phase}
+                  {isBreathActive
+                    ? `Cycle ${cycleNumber} of 3 • ${breathSecondsLeft}s Left`
+                    : "Reset Complete"}
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-widest bg-white/10 text-white font-semibold">
-                  {currentMeditation.action}
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-widest bg-white/10 text-white font-semibold uppercase">
+                  {isBreathActive ? breathPhaseText : "Mind in Flight"}
                 </span>
               </div>
 
-              <p className="text-sm sm:text-base text-white font-light leading-relaxed tracking-wide transition-opacity duration-500">
-                &ldquo;{currentMeditation.instruction}&rdquo;
-              </p>
+              <div className="min-h-[56px] flex items-center">
+                <p className="text-sm sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide transition-opacity duration-700">
+                  {isBreathActive
+                    ? `“${breathInstruction}”`
+                    : "“30-second breath reset complete. Gravity released. Your mind is ready to soar.”"}
+                </p>
+              </div>
 
-              {/* Progress Breath Bar */}
-              <div className="w-full bg-white/10 h-0.5 rounded-full overflow-hidden mt-4">
+              {/* 30-Second Countdown Progress Bar */}
+              <div className="w-full bg-white/10 h-0.5 rounded-full overflow-hidden mt-3">
                 <div
                   className="bg-white h-full transition-all duration-1000 ease-linear"
                   style={{
-                    width: `${((meditationIndex + 1) / MEDITATION_STEPS.length) * 100}%`,
+                    width: `${((30 - breathSecondsLeft) / 30) * 100}%`,
                   }}
                 />
               </div>
 
               <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1">
-                <span>Guided Diaphragmatic Breathwork</span>
-                <span>
-                  Phase {meditationIndex + 1} of {MEDITATION_STEPS.length}
-                </span>
+                <span>30-Second Diaphragmatic Cadence</span>
+                {!isBreathActive && (
+                  <button
+                    onClick={restartBreathReset}
+                    className="flex items-center gap-1 text-white hover:text-cyan-300 transition uppercase font-semibold"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Repeat 30s Reset</span>
+                  </button>
+                )}
               </div>
             </div>
           )}
 
-          {/* TAB 2: CELESTIAL HORIZONS (REAL SCIENCE + VISUALIZATION) */}
+          {/* TAB 2: CELESTIAL HORIZONS (REAL SCIENCE + SOFT CHANGING) */}
           {activeTab === "celestial" && (
             <div className="space-y-3">
-              {/* Destination Pills */}
+              {/* Destination Selector */}
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
                 {CELESTIAL_DATA.map((dest) => (
                   <button
@@ -297,7 +327,13 @@ export default function CosmosAestheticPanel() {
                 ))}
               </div>
 
-              <div className="pt-1">
+              <div
+                className={`pt-1 transition-all duration-500 ease-in-out ${
+                  isSoftFading
+                    ? "opacity-0 blur-[1px] translate-y-0.5"
+                    : "opacity-100 blur-0 translate-y-0"
+                }`}
+              >
                 <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-1">
                   <span className="text-white font-semibold">
                     {currentDest.name}
@@ -314,9 +350,15 @@ export default function CosmosAestheticPanel() {
             </div>
           )}
 
-          {/* TAB 3: PHILOSOPHY & SCIENCE (KANT, NIETZSCHE, EINSTEIN, SAGAN) */}
+          {/* TAB 3: PHILOSOPHY & SCIENCE (SOFT CROSS-FADE TRANSITIONS) */}
           {activeTab === "philosophy" && (
-            <div className="space-y-3">
+            <div
+              className={`space-y-3 transition-all duration-700 ease-in-out ${
+                isSoftFading
+                  ? "opacity-0 blur-[2px] translate-y-1"
+                  : "opacity-100 blur-0 translate-y-0"
+              }`}
+            >
               <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
                 <span className="text-white font-semibold">
                   {currentPhilosophy.author}
@@ -324,15 +366,23 @@ export default function CosmosAestheticPanel() {
                 <span>{currentPhilosophy.work}</span>
               </div>
 
-              <p className="text-sm sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide italic transition-opacity duration-500">
-                &ldquo;{currentPhilosophy.quote}&rdquo;
-              </p>
+              <div className="min-h-[64px] flex items-center">
+                <p className="text-sm sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide italic">
+                  &ldquo;{currentPhilosophy.quote}&rdquo;
+                </p>
+              </div>
 
-              <div className="flex items-center gap-1 pt-2">
+              <div className="flex items-center gap-1 pt-1">
                 {PHILOSOPHY_QUOTES.map((_, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setPhilosophyIndex(idx)}
+                    onClick={() => {
+                      setIsSoftFading(true);
+                      setTimeout(() => {
+                        setPhilosophyIndex(idx);
+                        setIsSoftFading(false);
+                      }, 300);
+                    }}
                     className={`h-1 rounded-full transition-all ${
                       idx === philosophyIndex
                         ? "w-6 bg-white"
@@ -346,7 +396,7 @@ export default function CosmosAestheticPanel() {
         </div>
       </div>
 
-      {/* 4. Foundational Core Reflections (Always visible, elegant hairline border) */}
+      {/* 4. Foundational Core Reflections (Always visible, clean hairline border) */}
       <div className="relative z-10 space-y-3 border-t border-white/5 pt-4 my-2">
         <div className="group pl-3.5 border-l-2 border-white/70">
           <p className="text-[11px] font-bold tracking-wider uppercase text-zinc-400 mb-0.5">
