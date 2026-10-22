@@ -9,8 +9,6 @@ import {
   Send,
   Heart,
   Eye,
-  Sparkles,
-  MessageCircle,
 } from "lucide-react";
 
 interface RealtimeThought {
@@ -21,6 +19,8 @@ interface RealtimeThought {
   likes: number;
   isLiked?: boolean;
 }
+
+const TOTAL_TRIP_SECONDS = 240; // 4 Minutes
 
 export default function CosmosAestheticPanel() {
   const {
@@ -37,24 +37,21 @@ export default function CosmosAestheticPanel() {
   const isFlyAwayActive = currentSong?.id === flyAwaySong?.id;
   const isFlyAwayPlaying = isFlyAwayActive && isPlaying;
 
-  // 30-Second Guided Meditation State (Starts from scratch!)
-  const [meditationSeconds, setMeditationSeconds] = useState<number>(0);
-  const [isMeditationActive, setIsMeditationActive] = useState<boolean>(true);
+  // 4-Minute Journey Timer (0s to 240s)
+  const [tripSeconds, setTripSeconds] = useState<number>(0);
+  const [isTripActive, setIsTripActive] = useState<boolean>(true);
   const [isSoftFading, setIsSoftFading] = useState<boolean>(false);
 
-  // Side quotes rotating index
-  const [sideQuoteIndex, setSideQuoteIndex] = useState<number>(0);
-
-  // Real-time Community Thoughts / Questions (No fake mock comments)
+  // Real-time Community Thoughts / Questions (Zero mock comments, pure real submissions)
   const [thoughts, setThoughts] = useState<RealtimeThought[]>([]);
   const [thoughtInput, setThoughtInput] = useState<string>("");
   const [authorInput, setAuthorInput] = useState<string>("");
   const [justShared, setJustShared] = useState<boolean>(false);
 
-  // Load real-time thoughts from localStorage (clean, only real user submissions)
+  // Load real-time thoughts from localStorage
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("hellomusic_realtime_thoughts_v2");
+      const saved = localStorage.getItem("hellomusic_realtime_thoughts_v3");
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
@@ -66,26 +63,26 @@ export default function CosmosAestheticPanel() {
     }
   }, []);
 
-  // Timer: 0 to 30 seconds
+  // 4-Minute Timer: increments 1 second every 1000ms up to 240s
   useEffect(() => {
-    if (!isMeditationActive) return;
-    if (meditationSeconds >= 30) return;
+    if (!isTripActive) return;
+    if (tripSeconds >= TOTAL_TRIP_SECONDS) return;
 
     const interval = setInterval(() => {
-      setMeditationSeconds((prev) => {
-        if (prev >= 29) return 30;
+      setTripSeconds((prev) => {
+        if (prev >= TOTAL_TRIP_SECONDS - 1) return TOTAL_TRIP_SECONDS;
         return prev + 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isMeditationActive, meditationSeconds]);
+  }, [isTripActive, tripSeconds]);
 
-  // Restart 30s meditation from 0s
-  const restartMeditation = useCallback(() => {
+  // Restart the 4-Minute Trip from 0s
+  const restartTrip = useCallback(() => {
     setIsSoftFading(true);
-    setMeditationSeconds(0);
-    setIsMeditationActive(true);
+    setTripSeconds(0);
+    setIsTripActive(true);
     setTimeout(() => {
       setIsSoftFading(false);
     }, 200);
@@ -94,14 +91,6 @@ export default function CosmosAestheticPanel() {
       playSong(flyAwaySong);
     }
   }, [flyAwaySong, isFlyAwayPlaying, playSong]);
-
-  // Rotate side quotes gently every 8 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSideQuoteIndex((prev) => (prev + 1) % 4);
-    }, 8000);
-    return () => clearInterval(timer);
-  }, []);
 
   const handlePlayToggle = () => {
     if (isFlyAwayActive) {
@@ -132,7 +121,7 @@ export default function CosmosAestheticPanel() {
     setTimeout(() => setJustShared(false), 3000);
 
     try {
-      localStorage.setItem("hellomusic_realtime_thoughts_v2", JSON.stringify(updated));
+      localStorage.setItem("hellomusic_realtime_thoughts_v3", JSON.stringify(updated));
     } catch {
       // ignore
     }
@@ -152,7 +141,7 @@ export default function CosmosAestheticPanel() {
         return t;
       });
       try {
-        localStorage.setItem("hellomusic_realtime_thoughts_v2", JSON.stringify(next));
+        localStorage.setItem("hellomusic_realtime_thoughts_v3", JSON.stringify(next));
       } catch {
         // ignore
       }
@@ -160,115 +149,113 @@ export default function CosmosAestheticPanel() {
     });
   };
 
-  // 30s Meditation & Philosophy/Science Content
-  const getMeditationContent = (sec: number) => {
-    if (sec < 8) {
+  // Format MM:SS
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  // 4-Minute Journey Flow (240s) based on user's exact poem & cadence
+  const getJourneyContent = (sec: number) => {
+    if (sec < 15) {
+      // Breathing Guide: 5s Inhale, 5s Hold, 5s Exhale
+      let breathCue = "Inhale (5s)";
+      if (sec >= 5 && sec < 10) breathCue = "Hold (5s)";
+      else if (sec >= 10) breathCue = "Exhale (5s)";
+
       return {
-        phase: "Breathe In",
-        cue: "Gentle Inhale",
-        heading: "Take a breath... why so serious?",
-        sub: "Drop your shoulders away from your ears. Feel the calm instrumental rhythm of Fly away and let your mind float free.",
-        authorTag: "Mindful Cadence",
+        stage: "5-5-5 Mindful Breathing",
+        cue: breathCue,
+        heading: "Take a breath for 5 sec, hold 5 sec, exhale, and continue normally.",
+        text: "Drop your shoulders away from your ears. Settle into the quiet stillness of pure sound.",
       };
-    } else if (sec < 16) {
+    } else if (sec < 50) {
       return {
-        phase: "Weightlessness",
-        cue: "Nietzsche Elevation",
-        heading: "Imagine you are flying above the Earth",
-        sub: "“The higher we soar, the smaller we appear to those who cannot fly.” — Friedrich Nietzsche",
-        authorTag: "Friedrich Nietzsche",
+        stage: "Lifting Off",
+        cue: "Elevation",
+        heading: "Fly fly away",
+        text: "Lifting softly above every ceiling, every wall, and every terrestrial weight. You are pure elevation.",
       };
-    } else if (sec < 24) {
+    } else if (sec < 90) {
       return {
-        phase: "Cosmic Horizon",
-        cue: "Kant & Sagan Perspective",
-        heading: "Look down at the pale blue marble",
-        sub: "“Two things fill the mind with awe: the starry heavens above me and the moral law within me.” — Immanuel Kant • “We are star-stuff.” — Carl Sagan",
-        authorTag: "Kant & Sagan",
+        stage: "Across the Sky",
+        cue: "Horizon",
+        heading: "Fly beyond your imagination across the sky",
+        text: "Soaring through vast open space. “The higher we soar, the smaller we appear to those who cannot fly.” — Friedrich Nietzsche",
       };
-    } else if (sec < 30) {
+    } else if (sec < 135) {
       return {
-        phase: "Boundless Void",
-        cue: "Einstein Imagination",
-        heading: "Shedding all limits",
-        sub: "“Imagination is more important than knowledge... it embraces the entire universe.” — Albert Einstein",
-        authorTag: "Albert Einstein",
+        stage: "Weightlessness",
+        cue: "Dissolving Limits",
+        heading: "Imagine you are a cloud",
+        text: "Soft, boundless, drifting effortlessly across golden atmospheric light. Free from all resistance.",
+      };
+    } else if (sec < 180) {
+      return {
+        stage: "Cosmic Perspective",
+        cue: "Deep Universe",
+        heading: "Imagine you are the brightest star",
+        text: "Luminous in the silent, velvety expanse of space. “The cosmos is within us. We are made of star-stuff.” — Carl Sagan",
       };
     } else {
       return {
-        phase: "Transcendence",
-        cue: "Beyond Cosmos",
-        heading: "Now imagine beyond the universe.",
-        sub: "The cosmos is soaring with you. Once you have learned to fly in your mind, even the universe is no longer the limit.",
-        authorTag: "ZION Cosmic Journey",
+        stage: "The Infinite Mind",
+        cue: "Transcendence",
+        heading: "Now imagine something that none can imagine except you",
+        text: "A boundless universe born of your own consciousness. “Two things fill the mind with awe: the starry heavens above me and the moral law within me.” — Immanuel Kant",
       };
     }
   };
 
-  const currentMeditation = getMeditationContent(meditationSeconds);
+  const currentJourney = getJourneyContent(tripSeconds);
 
-  // Side quotes from strictly Kant, Nietzsche, Einstein, Sagan
-  const SIDE_QUOTES = [
-    {
-      author: "Friedrich Nietzsche",
-      quote: "You must have chaos within you to give birth to a dancing star.",
-      tag: "Philosophy",
-    },
-    {
-      author: "Carl Sagan",
-      quote: "The cosmos is within us. We are a way for the cosmos to know itself.",
-      tag: "Science",
-    },
-    {
-      author: "Immanuel Kant",
-      quote: "The dove cleaving the air imagines flight would be easier in empty space.",
-      tag: "Philosophy",
-    },
-    {
-      author: "Albert Einstein",
-      quote: "The most beautiful experience we can have is the mysterious.",
-      tag: "Science",
-    },
-  ];
-
-  const currentSideQuote = SIDE_QUOTES[sideQuoteIndex];
+  // Central White Circle Breathing / Pulse Scale
+  const getCircleScaleClass = () => {
+    if (tripSeconds < 5) return "scale-110 shadow-[0_0_36px_rgba(255,255,255,1)]";
+    if (tripSeconds < 10) return "scale-110 shadow-[0_0_30px_rgba(255,255,255,0.95)]";
+    if (tripSeconds < 15) return "scale-95 shadow-[0_0_20px_rgba(255,255,255,0.7)]";
+    return isFlyAwayPlaying
+      ? "scale-105 shadow-[0_0_32px_rgba(255,255,255,1)]"
+      : "scale-100 shadow-[0_0_20px_rgba(255,255,255,0.75)]";
+  };
 
   return (
-    <div className="relative w-full rounded-2xl sm:rounded-3xl bg-[#121214] border border-white/10 p-4 sm:p-7 shadow-2xl select-none overflow-hidden transition-all duration-300 hover:border-white/20">
-      {/* Background Subtle Celestial Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.06)_0%,transparent_65%)] pointer-events-none" />
+    <div className="relative w-full rounded-2xl sm:rounded-3xl bg-[#0c0c0e] border border-white/10 p-4 sm:p-7 shadow-2xl select-none overflow-hidden transition-all duration-300 hover:border-white/20">
+      {/* Background Subtle Pure White Ambient Radial Glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.05)_0%,transparent_65%)] pointer-events-none" />
 
-      {/* 1. TOP HEADER: Status, Views & Likes (~200 views, 4 likes) */}
-      <div className="relative z-10 flex items-center justify-between pb-3.5 border-b border-white/5">
+      {/* 1. TOP HEADER: Clean Pure White Hues, 214 Views & 4 Likes */}
+      <div className="relative z-10 flex items-center justify-between pb-3.5 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] sm:text-xs font-mono tracking-widest text-zinc-400 uppercase font-semibold">
+          <span className="text-[11px] sm:text-xs tracking-wider text-zinc-300 uppercase font-semibold">
             ESCAPE TO COSMOS
           </span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-            ZION ORIGINAL MASTER
+          <span className="text-[10px] tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/15 uppercase font-medium">
+            4-MIN TRIP
           </span>
         </div>
 
-        {/* Real-time realistic metrics: ~200 views, 4 likes */}
-        <div className="flex items-center gap-3 text-xs font-mono">
-          <div className="flex items-center gap-1.5 text-zinc-400" title="Total Views">
-            <Eye className="w-3.5 h-3.5 text-zinc-500" />
-            <span>{flyAwaySong ? flyAwaySong.views_count.toLocaleString() : "214"}</span>
+        {/* Realistic metrics: ~200 views, 4 likes */}
+        <div className="flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1.5 text-zinc-400" title="Views">
+            <Eye className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="text-zinc-300 font-medium">{flyAwaySong ? flyAwaySong.views_count.toLocaleString() : "214"}</span>
           </div>
 
           <button
             type="button"
             onClick={() => flyAwaySong && toggleLike(flyAwaySong.id)}
-            className={`flex items-center gap-1.5 px-2 py-1 rounded-full border transition active:scale-95 ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition active:scale-95 ${
               flyAwaySong?.is_liked
-                ? "bg-white/10 border-white/30 text-white font-bold"
-                : "border-white/10 text-zinc-400 hover:text-white"
+                ? "bg-white text-black font-bold border-white shadow-sm"
+                : "border-white/15 text-zinc-300 hover:text-white hover:bg-white/5"
             }`}
             title="Like this track"
           >
             <Heart
               className={`w-3.5 h-3.5 ${
-                flyAwaySong?.is_liked ? "fill-white text-white" : ""
+                flyAwaySong?.is_liked ? "fill-current" : ""
               }`}
             />
             <span>{flyAwaySong ? flyAwaySong.likes_count : 4}</span>
@@ -276,53 +263,45 @@ export default function CosmosAestheticPanel() {
         </div>
       </div>
 
-      {/* 2. THE CENTRAL STAGE: WHITE DOT IN CENTRE + CONCENTRIC RADAR RINGS */}
-      <div className="relative z-10 py-5 sm:py-7 flex flex-col items-center justify-center text-center">
-        {/* Floating Side Quote: Ambient Philosophy & Science */}
-        <div className="w-full flex items-center justify-between mb-3 px-1 text-[11px] font-mono">
-          <div className="flex items-center gap-1.5 text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse" />
-            <span className="uppercase tracking-wider">
-              {isFlyAwayPlaying ? "Spatial Sound Active" : "30s Mindful Flight"}
+      {/* 2. CENTRAL STAGE: ONLY ONE WHITE CIRCLE IN CENTRE (WHITE HUES ONLY) */}
+      <div className="relative z-10 py-6 sm:py-8 flex flex-col items-center justify-center text-center">
+        {/* Top Status & 4-Min Indicator */}
+        <div className="w-full flex items-center justify-between mb-4 px-1 text-xs text-zinc-400">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] animate-pulse" />
+            <span className="uppercase tracking-widest text-[10px] text-zinc-300 font-semibold">
+              {isFlyAwayPlaying ? "Music & Imagination Synchronized" : "4-Minute Instrumental Flight"}
             </span>
           </div>
 
-          {/* Side quote pill */}
-          <div
-            className="hidden sm:flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 transition-opacity duration-300 cursor-pointer"
-            onClick={() => setSideQuoteIndex((prev) => (prev + 1) % 4)}
-            title="Click to cycle quotes"
-          >
-            <Sparkles className="w-3 h-3 text-cyan-300 flex-shrink-0" />
-            <span className="italic truncate max-w-xs">
-              &ldquo;{currentSideQuote.quote}&rdquo; — {currentSideQuote.author}
-            </span>
-          </div>
+          <span className="text-[11px] font-medium text-zinc-400">
+            {formatTime(tripSeconds)} / 4:00
+          </span>
         </div>
 
-        {/* THE CENTRAL ORBITAL DISK WITH THE WHITE DOT IN THE DEAD CENTER */}
+        {/* THE ONLY ONE WHITE CIRCLE AT THE CENTER WITH DELICATE WHITE CONCENTRIC RINGS */}
         <div
           onClick={handlePlayToggle}
           className="relative w-44 h-44 sm:w-56 sm:h-56 rounded-full flex items-center justify-center cursor-pointer group my-2 select-none"
           title={isFlyAwayPlaying ? "Click to Pause" : "Click to Play Fly away"}
         >
-          {/* Ambient Glow Aura */}
+          {/* Subtle Outer White Glow Halo */}
           <div
             className={`absolute inset-0 rounded-full transition-all duration-700 ${
               isFlyAwayPlaying
-                ? "bg-cyan-500/10 shadow-[0_0_40px_rgba(34,211,238,0.25)] scale-105"
-                : "bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.05)] group-hover:scale-102"
+                ? "bg-white/[0.04] shadow-[0_0_40px_rgba(255,255,255,0.15)] scale-105"
+                : "bg-white/[0.02] shadow-[0_0_20px_rgba(255,255,255,0.05)] group-hover:scale-102"
             }`}
           />
 
-          {/* Outer Orbit Rings with Dashed Markers */}
+          {/* Concentric Orbital Rings in Pure White Opacities */}
           <svg
             className={`absolute inset-0 w-full h-full transition-transform duration-1000 ${
               isFlyAwayPlaying ? "animate-[spin_40s_linear_infinite]" : ""
             }`}
             viewBox="0 0 200 200"
           >
-            {/* Outer Ring */}
+            {/* Outer Subtle White Ring */}
             <circle
               cx="100"
               cy="100"
@@ -332,7 +311,7 @@ export default function CosmosAestheticPanel() {
               strokeOpacity="0.08"
               strokeWidth="1.2"
             />
-            {/* Middle Dashed Ring */}
+            {/* Middle Dashed White Ring */}
             <circle
               cx="100"
               cy="100"
@@ -343,22 +322,22 @@ export default function CosmosAestheticPanel() {
               strokeWidth="1.2"
               strokeDasharray="4 6"
             />
-            {/* Inner Ring */}
+            {/* Inner White Ring */}
             <circle
               cx="100"
               cy="100"
               r="58"
               fill="none"
               stroke="#ffffff"
-              strokeOpacity="0.18"
+              strokeOpacity="0.22"
               strokeWidth="1.5"
             />
-            {/* Audio Wave Arcs */}
+            {/* Soundwave Geometric Arcs in White */}
             <path
               d="M 65 100 A 35 35 0 0 1 135 100"
               fill="none"
               stroke="#ffffff"
-              strokeOpacity="0.35"
+              strokeOpacity="0.3"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -366,140 +345,130 @@ export default function CosmosAestheticPanel() {
               d="M 50 100 A 50 50 0 0 1 150 100"
               fill="none"
               stroke="#ffffff"
-              strokeOpacity="0.2"
+              strokeOpacity="0.16"
               strokeWidth="1.2"
               strokeDasharray="6 4"
             />
           </svg>
 
-          {/* Dark Vinyl Core Sphere */}
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-zinc-900 to-black border-2 border-white/40 flex items-center justify-center shadow-2xl transition-transform duration-200 group-hover:scale-105">
-            {/* Concentric Center Groove */}
-            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-white/20 flex items-center justify-center">
-              {/* THE WHITE DOT IN CENTRE */}
+          {/* Obsidian Disc Housing */}
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-zinc-900 to-black border border-white/20 flex items-center justify-center shadow-2xl transition-transform duration-200 group-hover:scale-105">
+            {/* Inner Border Ring */}
+            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-white/15 flex items-center justify-center">
+              {/* THE ONE WHITE CIRCLE */}
               <div
-                className={`relative rounded-full bg-white transition-all duration-300 flex items-center justify-center ${
-                  isFlyAwayPlaying
-                    ? "w-7 h-7 sm:w-8 sm:h-8 shadow-[0_0_24px_rgba(255,255,255,1)]"
-                    : "w-6 h-6 sm:w-7 sm:h-7 shadow-[0_0_12px_rgba(255,255,255,0.8)]"
-                }`}
+                className={`relative rounded-full bg-white transition-all duration-700 ease-out flex items-center justify-center ${getCircleScaleClass()} w-8 h-8 sm:w-9 sm:h-9`}
               >
-                {/* Center Core Black Micro Dot or Play/Pause Glyph */}
+                {/* Center Glyph */}
                 {isFlyAwayPlaying ? (
-                  <Pause className="w-3.5 h-3.5 fill-black text-black" />
+                  <Pause className="w-4 h-4 fill-black text-black" />
                 ) : (
-                  <Play className="w-3.5 h-3.5 fill-black text-black ml-0.5" />
+                  <Play className="w-4 h-4 fill-black text-black ml-0.5" />
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Central Track Identification */}
-        <div className="mt-1 flex items-center gap-2">
-          <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
+        {/* Track Title with iPhone-grade SF Pro Typography */}
+        <div className="mt-2 flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
             Fly away
           </h2>
           <span className="text-zinc-500">•</span>
-          <span className="text-xs sm:text-sm font-semibold text-zinc-300 font-mono">
-            ZION
+          <span className="text-xs sm:text-sm font-medium text-zinc-300">
+            ZION • Original Master
           </span>
         </div>
 
-        {/* 3. CENTRAL 30-SECOND GUIDED MEDITATION, PHILOSOPHY & SCIENCE */}
-        <div className="w-full max-w-xl mx-auto mt-4 px-2">
-          {/* Phase Tag & Timer Header */}
-          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono pb-1.5 border-b border-white/5">
+        {/* 3. CENTRAL 4-MINUTE POETIC GUIDANCE & BREATHING FLOW */}
+        <div className="w-full max-w-xl mx-auto mt-5 px-2">
+          {/* Stage & Progress Header */}
+          <div className="flex items-center justify-between text-xs pb-2 border-b border-white/10">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold uppercase border border-cyan-500/30">
-                {currentMeditation.phase}
+              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white text-[10px] font-semibold tracking-wider uppercase border border-white/15">
+                {currentJourney.stage}
               </span>
-              <span className="text-zinc-400">{currentMeditation.cue}</span>
+              <span className="text-zinc-400 text-[11px]">{currentJourney.cue}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold text-white">
-                {meditationSeconds < 30 ? `${30 - meditationSeconds}s left` : "30s Complete"}
+              <span className="font-semibold text-white text-xs">
+                {formatTime(tripSeconds)}
               </span>
               <button
                 type="button"
-                onClick={restartMeditation}
+                onClick={restartTrip}
                 className="p-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition"
-                title="Restart 30s Meditation from 0s"
+                title="Restart 4-Minute Journey from 0:00"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
 
-          {/* Dynamic Central Meditation Guidance & Quote */}
+          {/* Dynamic Poetic Journey Narrative (iPhone Native SF Typography) */}
           <div
-            className={`min-h-[72px] sm:min-h-[80px] flex flex-col justify-center py-2 transition-all duration-300 ${
+            className={`min-h-[88px] sm:min-h-[96px] flex flex-col justify-center py-3 transition-all duration-300 ${
               isSoftFading ? "opacity-0 translate-y-1" : "opacity-100 translate-y-0"
             }`}
           >
-            <h3 className="text-sm sm:text-base font-bold text-white tracking-tight mb-1">
-              {currentMeditation.heading}
+            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mb-1.5 leading-snug">
+              {currentJourney.heading}
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
-              {currentMeditation.sub}
+            <p className="text-xs sm:text-sm text-zinc-300 font-normal leading-relaxed">
+              {currentJourney.text}
             </p>
           </div>
 
-          {/* 30-Second Progress Line */}
-          <div className="space-y-1 pt-1">
+          {/* 4-Minute Progress Line */}
+          <div className="space-y-1.5 pt-1">
             <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-gradient-to-r from-cyan-400 via-white to-cyan-300 h-full transition-all duration-1000 ease-linear"
+                className="bg-white h-full transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(255,255,255,0.8)]"
                 style={{
-                  width: `${Math.min(100, (meditationSeconds / 30) * 100)}%`,
+                  width: `${Math.min(100, (tripSeconds / TOTAL_TRIP_SECONDS) * 100)}%`,
                 }}
               />
             </div>
 
-            <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-zinc-400">
-              <span>0s Inhale</span>
-              {meditationSeconds >= 30 ? (
+            <div className="flex items-center justify-between text-[10px] text-zinc-400 font-medium">
+              <span>0:00 Breathe In</span>
+              {tripSeconds >= TOTAL_TRIP_SECONDS ? (
                 <button
                   type="button"
-                  onClick={restartMeditation}
-                  className="text-cyan-300 hover:underline font-semibold"
+                  onClick={restartTrip}
+                  className="text-white hover:underline font-semibold"
                 >
-                  Now imagine beyond the universe • Restart 30s ↺
+                  Restart 4-Minute Trip ↺
                 </button>
               ) : (
-                <span>30s Beyond the Universe</span>
+                <span>4:00 Beyond the Universe</span>
               )}
             </div>
           </div>
         </div>
-
-        {/* Mobile Quote Fallback */}
-        <div className="sm:hidden mt-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[10px] text-zinc-400 italic">
-          &ldquo;{currentSideQuote.quote}&rdquo; — {currentSideQuote.author}
-        </div>
       </div>
 
-      {/* 4. REAL-TIME INTERACTIVE THOUGHTS & QUESTIONS (Clean, Real-time, Zero fake comments) */}
-      <div className="relative z-10 pt-4 mt-2 border-t border-white/5">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-white tracking-tight">
-            <MessageCircle className="w-3.5 h-3.5 text-cyan-300" />
-            <span>Real-Time Cosmos Thoughts & Questions</span>
-          </div>
-          <span className="text-[10px] font-mono text-zinc-500 uppercase">
+      {/* 4. REAL-TIME THOUGHTS & QUESTIONS: Clean White Hues Only, No Cyan, No Fake Comments */}
+      <div className="relative z-10 pt-4 mt-2 border-t border-white/10">
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-xs font-bold text-white tracking-tight">
+            Real-Time Cosmos Thoughts & Questions
+          </span>
+          <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-medium">
             Live Stream
           </span>
         </div>
 
-        {/* Real-time Thought Input Form */}
+        {/* Real-Time Input Form */}
         <form onSubmit={handlePostThought} className="flex items-center gap-2 mb-3">
           <input
             type="text"
             value={authorInput}
             onChange={(e) => setAuthorInput(e.target.value)}
             placeholder="Name (optional)"
-            className="w-24 sm:w-32 bg-black/50 border border-white/10 rounded-full px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
+            className="w-24 sm:w-32 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
           />
           <div className="flex-1 relative">
             <input
@@ -507,7 +476,7 @@ export default function CosmosAestheticPanel() {
               value={thoughtInput}
               onChange={(e) => setThoughtInput(e.target.value)}
               placeholder="Ask a question or share a thought to the cosmos..."
-              className="w-full bg-black/50 border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 pr-9"
+              className="w-full bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 pr-9"
             />
             <button
               type="submit"
@@ -521,26 +490,26 @@ export default function CosmosAestheticPanel() {
         </form>
 
         {justShared && (
-          <div className="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 border border-cyan-800/40 rounded px-2.5 py-1 text-center mb-2">
-            Your thought has been shared in real-time to the cosmos!
+          <div className="text-[11px] text-zinc-200 bg-white/10 border border-white/15 rounded-lg px-3 py-1 text-center mb-2 font-medium">
+            Your thought has been shared in real-time to the cosmos.
           </div>
         )}
 
-        {/* Live Thoughts Stream (Clean, minimal, real) */}
+        {/* Live Thoughts Stream */}
         {thoughts.length > 0 && (
           <div className="space-y-1.5 max-h-36 overflow-y-auto no-scrollbar pr-1">
             {thoughts.slice(0, 4).map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between gap-2 p-2 rounded-xl bg-black/40 border border-white/5 text-xs"
+                className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400">
-                    <span className="font-bold text-white">{item.author}</span>
+                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-medium">
+                    <span className="font-semibold text-white">{item.author}</span>
                     <span>•</span>
                     <span className="text-zinc-500">{item.timestamp}</span>
                   </div>
-                  <p className="text-zinc-200 text-xs font-light truncate mt-0.5">
+                  <p className="text-zinc-200 text-xs font-normal truncate mt-0.5">
                     {item.text}
                   </p>
                 </div>
@@ -548,15 +517,15 @@ export default function CosmosAestheticPanel() {
                 <button
                   type="button"
                   onClick={() => handleToggleLikeThought(item.id)}
-                  className={`flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded transition ${
+                  className={`flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded transition ${
                     item.isLiked
-                      ? "text-red-400"
+                      ? "text-white font-bold"
                       : "text-zinc-500 hover:text-white"
                   }`}
                   title="Like"
                 >
                   <Heart
-                    className={`w-3 h-3 ${item.isLiked ? "fill-current" : ""}`}
+                    className={`w-3 h-3 ${item.isLiked ? "fill-white text-white" : ""}`}
                   />
                   <span>{item.likes}</span>
                 </button>
@@ -566,8 +535,8 @@ export default function CosmosAestheticPanel() {
         )}
       </div>
 
-      {/* 5. BOTTOM BAR: Audio Player Dock & Spatial Status */}
-      <div className="relative z-10 pt-3 mt-3 border-t border-white/5 flex items-center justify-between">
+      {/* 5. BOTTOM BAR: Audio Player Dock */}
+      <div className="relative z-10 pt-3 mt-3 border-t border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -588,16 +557,16 @@ export default function CosmosAestheticPanel() {
           </div>
         </div>
 
-        {/* Live Audio Waves */}
+        {/* Live Audio Waves in White */}
         {isFlyAwayPlaying ? (
           <div className="flex items-center gap-1 h-3.5">
-            <span className="w-0.5 bg-white rounded-full animate-equalize1 h-full" />
-            <span className="w-0.5 bg-white rounded-full animate-equalize2 h-full" />
-            <span className="w-0.5 bg-white rounded-full animate-equalize3 h-full" />
-            <span className="w-0.5 bg-white rounded-full animate-equalize4 h-full" />
+            <span className="w-0.5 bg-white rounded-full animate-equalize1 h-full shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+            <span className="w-0.5 bg-white rounded-full animate-equalize2 h-full shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+            <span className="w-0.5 bg-white rounded-full animate-equalize3 h-full shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+            <span className="w-0.5 bg-white rounded-full animate-equalize4 h-full shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
           </div>
         ) : (
-          <span className="text-[9px] font-mono text-zinc-500 tracking-wider">
+          <span className="text-[10px] text-zinc-400 tracking-wider font-medium">
             24-BIT LOSSLESS
           </span>
         )}
