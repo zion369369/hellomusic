@@ -74,6 +74,9 @@ interface PlayerContextType {
   setIsAuthModalOpen: (open: boolean) => void;
   isSupabaseModalOpen: boolean;
   setIsSupabaseModalOpen: (open: boolean) => void;
+  isFlightModalOpen: boolean;
+  setIsFlightModalOpen: (open: boolean) => void;
+  getAudioElement: () => HTMLAudioElement | null;
 
   // User Auth
   currentUser: UserProfile | null;
@@ -108,6 +111,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState<boolean>(false);
+  const [isFlightModalOpen, setIsFlightModalOpen] = useState<boolean>(false);
 
   // User profile
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -492,6 +496,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         setIsAuthModalOpen,
         isSupabaseModalOpen,
         setIsSupabaseModalOpen,
+        isFlightModalOpen,
+        setIsFlightModalOpen,
+        getAudioElement: () => audioRef.current,
         currentUser,
         setCurrentUser,
         loginUser,
