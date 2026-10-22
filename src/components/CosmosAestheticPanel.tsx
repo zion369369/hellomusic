@@ -65,7 +65,7 @@ const CELESTIAL_DATA: CelestialScience[] = [
 
 const CALM_MEDITATION_PHRASES = [
   {
-    cue: "Somatic Presence",
+    cue: "Somatic Grounding",
     phase: "Grounding",
     thought:
       "Allow your shoulders to drop away from your ears. Let your awareness settle softly into the sound.",
@@ -96,6 +96,7 @@ const CALM_MEDITATION_PHRASES = [
   },
 ];
 
+// Strictly Immanuel Kant & Friedrich Nietzsche
 const PHILOSOPHY_QUOTES = [
   {
     quote:
@@ -111,6 +112,28 @@ const PHILOSOPHY_QUOTES = [
   },
   {
     quote:
+      "He who would learn to fly one day must first learn to stand and walk and run and climb and dance; one cannot fly into flying.",
+    author: "Friedrich Nietzsche",
+    work: "Thus Spoke Zarathustra, 1883",
+  },
+  {
+    quote:
+      "Two things fill the mind with ever new and increasing admiration and awe: the starry heavens above me and the moral law within me.",
+    author: "Immanuel Kant",
+    work: "Critique of Practical Reason, 1788",
+  },
+  {
+    quote:
+      "And those who were seen dancing were thought to be insane by those who could not hear the music.",
+    author: "Friedrich Nietzsche",
+    work: "Thus Spoke Zarathustra",
+  },
+];
+
+// Strictly Albert Einstein & Carl Sagan
+const SCIENCE_QUOTES = [
+  {
+    quote:
       "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world, stimulating progress, giving birth to evolution.",
     author: "Albert Einstein",
     work: "What Life Means to Einstein, 1929",
@@ -123,15 +146,27 @@ const PHILOSOPHY_QUOTES = [
   },
   {
     quote:
-      "Once you have tasted flight, you will forever walk the earth with your eyes turned skyward, for there you have been, and there you will always long to return.",
-    author: "Leonardo da Vinci",
-    work: "Codex on the Flight of Birds",
+      "The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art and true science.",
+    author: "Albert Einstein",
+    work: "The World As I See It, 1931",
   },
   {
     quote:
-      "Look at the stars and see yourself running with them. Constantly contemplate the changes of the universe.",
-    author: "Marcus Aurelius",
-    work: "Meditations, Book VII",
+      "Look again at that dot. That's here. That's home. That's us. On it everyone you love, everyone you know, everyone you ever heard of, lived out their lives.",
+    author: "Carl Sagan",
+    work: "Pale Blue Dot, 1994",
+  },
+  {
+    quote:
+      "Imagination will often carry us to worlds that never were. But without it we go nowhere.",
+    author: "Carl Sagan",
+    work: "Cosmos, 1980",
+  },
+  {
+    quote:
+      "Look deep into nature, and then you will understand everything better.",
+    author: "Albert Einstein",
+    work: "The World As I See It",
   },
 ];
 
@@ -151,34 +186,38 @@ export default function CosmosAestheticPanel() {
   const isFlyAwayPlaying = isFlyAwayActive && isPlaying;
 
   const [activeTab, setActiveTab] = useState<
-    "meditation" | "celestial" | "philosophy"
+    "meditation" | "celestial" | "philosophy" | "science"
   >("meditation");
 
+  const [selectedDestId, setSelectedDestId] = useState<string>("moon");
   const [meditationIndex, setMeditationIndex] = useState<number>(0);
   const [philosophyIndex, setPhilosophyIndex] = useState<number>(0);
+  const [scienceIndex, setScienceIndex] = useState<number>(0);
   const [isSoftFading, setIsSoftFading] = useState<boolean>(false);
 
-  // Sync with Sidebar selection
+  // Synchronize perfectly with activeImaginationId from Sidebar
   useEffect(() => {
     if (!activeImaginationId) return;
 
-    if (activeImaginationId === "philosophy") {
+    if (activeImaginationId === "meditation") {
+      setActiveTab("meditation");
+    } else if (activeImaginationId === "philosophy") {
       setActiveTab("philosophy");
+    } else if (activeImaginationId === "science") {
+      setActiveTab("science");
     } else {
-      const isCelestial = CELESTIAL_DATA.some(
-        (d) => d.id === activeImaginationId
-      );
-      if (isCelestial) {
+      const match = CELESTIAL_DATA.find((d) => d.id === activeImaginationId);
+      if (match) {
         setActiveTab("celestial");
+        setSelectedDestId(match.id);
       }
     }
   }, [activeImaginationId]);
 
   const currentDest =
-    CELESTIAL_DATA.find((d) => d.id === activeImaginationId) ||
-    CELESTIAL_DATA[0];
+    CELESTIAL_DATA.find((d) => d.id === selectedDestId) || CELESTIAL_DATA[0];
 
-  // Calm Meditation: Continuous unhurried cycle (8-10 seconds per thought)
+  // Meditation soft cycle
   useEffect(() => {
     if (activeTab !== "meditation") return;
 
@@ -195,22 +234,42 @@ export default function CosmosAestheticPanel() {
     return () => clearInterval(timer);
   }, [activeTab]);
 
-  // Philosophy quotes: Soft, slow auto-advance (11 seconds)
-  const isFadingRef = useRef(false);
+  // Philosophy quotes: Nietzsche & Kant (10s soft cross-fade)
+  const isPhilFadingRef = useRef(false);
   useEffect(() => {
     if (activeTab !== "philosophy") return;
 
     const timer = setInterval(() => {
-      if (isFadingRef.current) return;
-      isFadingRef.current = true;
+      if (isPhilFadingRef.current) return;
+      isPhilFadingRef.current = true;
       setIsSoftFading(true);
 
       setTimeout(() => {
         setPhilosophyIndex((prev) => (prev + 1) % PHILOSOPHY_QUOTES.length);
         setIsSoftFading(false);
-        isFadingRef.current = false;
+        isPhilFadingRef.current = false;
       }, 700);
-    }, 11000);
+    }, 10000);
+
+    return () => clearInterval(timer);
+  }, [activeTab]);
+
+  // Science quotes: Einstein & Sagan (10s soft cross-fade)
+  const isSciFadingRef = useRef(false);
+  useEffect(() => {
+    if (activeTab !== "science") return;
+
+    const timer = setInterval(() => {
+      if (isSciFadingRef.current) return;
+      isSciFadingRef.current = true;
+      setIsSoftFading(true);
+
+      setTimeout(() => {
+        setScienceIndex((prev) => (prev + 1) % SCIENCE_QUOTES.length);
+        setIsSoftFading(false);
+        isSciFadingRef.current = false;
+      }, 700);
+    }, 10000);
 
     return () => clearInterval(timer);
   }, [activeTab]);
@@ -218,6 +277,7 @@ export default function CosmosAestheticPanel() {
   const handleSelectDest = (id: string) => {
     setIsSoftFading(true);
     setTimeout(() => {
+      setSelectedDestId(id);
       setActiveImaginationId(id);
       setIsSoftFading(false);
     }, 350);
@@ -225,6 +285,16 @@ export default function CosmosAestheticPanel() {
     if (!isFlyAwayPlaying && flyAwaySong) {
       playSong(flyAwaySong);
     }
+  };
+
+  const handleTabChange = (
+    tab: "meditation" | "celestial" | "philosophy" | "science"
+  ) => {
+    setActiveTab(tab);
+    if (tab === "philosophy") setActiveImaginationId("philosophy");
+    else if (tab === "science") setActiveImaginationId("science");
+    else if (tab === "celestial") setActiveImaginationId(selectedDestId);
+    else if (tab === "meditation") setActiveImaginationId("meditation");
   };
 
   const handlePlayToggle = () => {
@@ -237,29 +307,30 @@ export default function CosmosAestheticPanel() {
 
   const currentMeditation = CALM_MEDITATION_PHRASES[meditationIndex];
   const currentPhilosophy = PHILOSOPHY_QUOTES[philosophyIndex];
+  const currentScience = SCIENCE_QUOTES[scienceIndex];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-[#121214] border border-white/10 p-6 sm:p-8 flex flex-col justify-between shadow-2xl select-none transition-all duration-300 hover:border-white/20 h-full">
-      {/* 1. Header: Calm & Spotify Brand Aesthetic */}
-      <div className="relative z-10 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/5 pb-4">
-          <span className="text-[11px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
+    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#121214] border border-white/10 p-4 sm:p-7 flex flex-col justify-between shadow-2xl select-none transition-all duration-300 hover:border-white/20 h-full">
+      {/* 1. Top Status Bar */}
+      <div className="relative z-10 space-y-3 sm:space-y-4">
+        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
             ESCAPE TO COSMOS
           </span>
 
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse" />
-            <span className="text-[11px] font-mono text-zinc-400 uppercase">
-              {isFlyAwayPlaying ? "Spatial Audio Active" : "Mindful Presence"}
+            <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400 uppercase">
+              {isFlyAwayPlaying ? "Spatial Sound Active" : "Mindful Presence"}
             </span>
           </div>
         </div>
 
-        {/* 2. Apple / Spotify Segmented Control */}
-        <div className="grid grid-cols-3 p-1 rounded-xl bg-black/60 border border-white/10 text-xs">
+        {/* 2. Apple / Spotify Segmented Tabs (Meditation, Celestial, Philosophy, Science) */}
+        <div className="grid grid-cols-4 p-1 rounded-xl bg-black/60 border border-white/10 text-[11px] sm:text-xs">
           <button
-            onClick={() => setActiveTab("meditation")}
-            className={`py-2 rounded-lg font-medium transition-all text-center ${
+            onClick={() => handleTabChange("meditation")}
+            className={`py-1.5 sm:py-2 rounded-lg font-medium transition-all text-center truncate px-1 ${
               activeTab === "meditation"
                 ? "bg-white text-black font-semibold shadow-sm"
                 : "text-zinc-400 hover:text-white"
@@ -268,45 +339,54 @@ export default function CosmosAestheticPanel() {
             Meditation
           </button>
           <button
-            onClick={() => setActiveTab("celestial")}
-            className={`py-2 rounded-lg font-medium transition-all text-center ${
+            onClick={() => handleTabChange("celestial")}
+            className={`py-1.5 sm:py-2 rounded-lg font-medium transition-all text-center truncate px-1 ${
               activeTab === "celestial"
                 ? "bg-white text-black font-semibold shadow-sm"
                 : "text-zinc-400 hover:text-white"
             }`}
           >
-            Celestial Horizons
+            Celestial
           </button>
           <button
-            onClick={() => setActiveTab("philosophy")}
-            className={`py-2 rounded-lg font-medium transition-all text-center ${
+            onClick={() => handleTabChange("philosophy")}
+            className={`py-1.5 sm:py-2 rounded-lg font-medium transition-all text-center truncate px-1 ${
               activeTab === "philosophy"
                 ? "bg-white text-black font-semibold shadow-sm"
                 : "text-zinc-400 hover:text-white"
             }`}
           >
-            Philosophy & Science
+            Philosophy
+          </button>
+          <button
+            onClick={() => handleTabChange("science")}
+            className={`py-1.5 sm:py-2 rounded-lg font-medium transition-all text-center truncate px-1 ${
+              activeTab === "science"
+                ? "bg-white text-black font-semibold shadow-sm"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            Science
           </button>
         </div>
 
         {/* 3. Dynamic Center Showcase */}
-        <div className="py-2 min-h-[190px] flex flex-col justify-center">
-          {/* TAB 1: CALM PROFESSIONAL MEDITATION (Unhurried, Solid Presence) */}
+        <div className="py-2 min-h-[160px] sm:min-h-[190px] flex flex-col justify-center">
+          {/* TAB 1: CALM MEDITATION */}
           {activeTab === "meditation" && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
                   {currentMeditation.cue}
                 </span>
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-widest bg-white/10 text-white font-semibold uppercase">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-widest bg-white/10 text-white font-semibold uppercase">
                   {currentMeditation.phase}
                 </span>
               </div>
 
-              {/* Serene Breathing Voice */}
-              <div className="min-h-[64px] flex items-center">
+              <div className="min-h-[58px] sm:min-h-[64px] flex items-center">
                 <p
-                  className={`text-sm sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide transition-all duration-700 ease-in-out ${
+                  className={`text-xs sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide transition-all duration-700 ease-in-out ${
                     isSoftFading
                       ? "opacity-0 blur-[2px] translate-y-1"
                       : "opacity-100 blur-0 translate-y-0"
@@ -316,8 +396,8 @@ export default function CosmosAestheticPanel() {
                 </p>
               </div>
 
-              {/* Hypnotic Continuous Breathing Wave Bar */}
-              <div className="w-full bg-white/10 h-0.5 rounded-full overflow-hidden mt-3">
+              {/* Serene Breathing Bar */}
+              <div className="w-full bg-white/10 h-0.5 rounded-full overflow-hidden mt-2">
                 <div
                   className="bg-white h-full transition-all duration-1000 ease-in-out"
                   style={{
@@ -326,23 +406,23 @@ export default function CosmosAestheticPanel() {
                 />
               </div>
 
-              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1">
-                <span>Diaphragmatic Awareness</span>
-                <span>Calm Pacing</span>
+              <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-zinc-500 pt-1">
+                <span>Diaphragmatic Calm</span>
+                <span>Unhurried Pacing</span>
               </div>
             </div>
           )}
 
-          {/* TAB 2: CELESTIAL HORIZONS (REAL SCIENCE + SOFT CHANGING) */}
+          {/* TAB 2: CELESTIAL HORIZONS */}
           {activeTab === "celestial" && (
             <div className="space-y-3">
-              {/* Destination Selector */}
+              {/* Destination Pills */}
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
                 {CELESTIAL_DATA.map((dest) => (
                   <button
                     key={dest.id}
                     onClick={() => handleSelectDest(dest.id)}
-                    className={`px-3 py-1 rounded-full text-xs whitespace-nowrap transition-all border ${
+                    className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs whitespace-nowrap transition-all border ${
                       currentDest.id === dest.id
                         ? "bg-white text-black font-semibold border-white shadow-sm"
                         : "bg-transparent text-zinc-400 border-white/10 hover:border-white/30 hover:text-white"
@@ -366,7 +446,7 @@ export default function CosmosAestheticPanel() {
                   </span>
                   <span>{currentDest.distance}</span>
                 </div>
-                <p className="text-[11px] font-mono text-zinc-500 mb-2">
+                <p className="text-[10px] sm:text-[11px] font-mono text-zinc-500 mb-1.5 sm:mb-2">
                   {currentDest.science}
                 </p>
                 <p className="text-xs sm:text-sm text-zinc-200 font-light leading-relaxed tracking-wide italic">
@@ -376,7 +456,7 @@ export default function CosmosAestheticPanel() {
             </div>
           )}
 
-          {/* TAB 3: PHILOSOPHY & SCIENCE (AUTHENTIC KANT, NIETZSCHE, SAGAN, EINSTEIN) */}
+          {/* TAB 3: PHILOSOPHY (KANT & NIETZSCHE ONLY) */}
           {activeTab === "philosophy" && (
             <div
               className={`space-y-3 transition-all duration-700 ease-in-out ${
@@ -389,11 +469,13 @@ export default function CosmosAestheticPanel() {
                 <span className="text-white font-semibold">
                   {currentPhilosophy.author}
                 </span>
-                <span>{currentPhilosophy.work}</span>
+                <span className="truncate max-w-[170px] sm:max-w-none">
+                  {currentPhilosophy.work}
+                </span>
               </div>
 
-              <div className="min-h-[64px] flex items-center">
-                <p className="text-sm sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide italic">
+              <div className="min-h-[58px] sm:min-h-[64px] flex items-center">
+                <p className="text-xs sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide italic">
                   &ldquo;{currentPhilosophy.quote}&rdquo;
                 </p>
               </div>
@@ -419,16 +501,62 @@ export default function CosmosAestheticPanel() {
               </div>
             </div>
           )}
+
+          {/* TAB 4: SCIENCE (EINSTEIN & SAGAN ONLY) */}
+          {activeTab === "science" && (
+            <div
+              className={`space-y-3 transition-all duration-700 ease-in-out ${
+                isSoftFading
+                  ? "opacity-0 blur-[2px] translate-y-1"
+                  : "opacity-100 blur-0 translate-y-0"
+              }`}
+            >
+              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
+                <span className="text-white font-semibold">
+                  {currentScience.author}
+                </span>
+                <span className="truncate max-w-[170px] sm:max-w-none">
+                  {currentScience.work}
+                </span>
+              </div>
+
+              <div className="min-h-[58px] sm:min-h-[64px] flex items-center">
+                <p className="text-xs sm:text-base text-zinc-100 font-light leading-relaxed tracking-wide italic">
+                  &ldquo;{currentScience.quote}&rdquo;
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1 pt-1">
+                {SCIENCE_QUOTES.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setIsSoftFading(true);
+                      setTimeout(() => {
+                        setScienceIndex(idx);
+                        setIsSoftFading(false);
+                      }, 300);
+                    }}
+                    className={`h-1 rounded-full transition-all ${
+                      idx === scienceIndex
+                        ? "w-6 bg-white"
+                        : "w-1.5 bg-white/20 hover:bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 4. Foundational Core Reflections (Always visible, clean hairline border) */}
-      <div className="relative z-10 space-y-3 border-t border-white/5 pt-4 my-2">
-        <div className="group pl-3.5 border-l-2 border-white/70">
-          <p className="text-[11px] font-bold tracking-wider uppercase text-zinc-400 mb-0.5">
+      {/* 4. Foundational Core Reflections */}
+      <div className="relative z-10 space-y-2.5 sm:space-y-3 border-t border-white/5 pt-3 sm:pt-4 my-2">
+        <div className="group pl-3 border-l-2 border-white/70">
+          <p className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-zinc-400 mb-0.5">
             Want to fly?
           </p>
-          <p className="text-xs text-zinc-400 font-light italic">
+          <p className="text-[11px] sm:text-xs text-zinc-400 font-light italic">
             It always starts with imagination.
           </p>
           <p className="text-xs sm:text-sm text-white font-medium mt-0.5 leading-relaxed">
@@ -436,7 +564,7 @@ export default function CosmosAestheticPanel() {
           </p>
         </div>
 
-        <div className="group pl-3.5 border-l-2 border-zinc-700/60">
+        <div className="group pl-3 border-l-2 border-zinc-700/60">
           <p className="text-xs sm:text-sm text-zinc-200 font-light leading-relaxed">
             I asked the universe why we cannot fly? She whispered,{" "}
             <span className="font-semibold text-white">
@@ -447,11 +575,11 @@ export default function CosmosAestheticPanel() {
       </div>
 
       {/* 5. Bottom Audio Dock: Spotify-grade Tactile Player */}
-      <div className="relative z-10 pt-4 border-t border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="relative z-10 pt-3 sm:pt-4 border-t border-white/5 flex items-center justify-between">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <button
             onClick={handlePlayToggle}
-            className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-lg"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-lg"
             title={isFlyAwayPlaying ? "Pause" : "Play"}
           >
             {isFlyAwayPlaying ? (
@@ -463,20 +591,22 @@ export default function CosmosAestheticPanel() {
 
           <div>
             <p className="text-xs font-bold text-white tracking-tight">Fly away</p>
-            <p className="text-[11px] text-zinc-400">ZION • Original Master</p>
+            <p className="text-[10px] sm:text-[11px] text-zinc-400">
+              ZION • Original Master
+            </p>
           </div>
         </div>
 
         {/* Live Audio Equalizer Waveform */}
         {isFlyAwayPlaying ? (
-          <div className="flex items-center gap-1 h-4">
+          <div className="flex items-center gap-1 h-3.5 sm:h-4">
             <span className="w-0.5 bg-white rounded-full animate-equalize1 h-full" />
             <span className="w-0.5 bg-white rounded-full animate-equalize2 h-full" />
             <span className="w-0.5 bg-white rounded-full animate-equalize3 h-full" />
             <span className="w-0.5 bg-white rounded-full animate-equalize4 h-full" />
           </div>
         ) : (
-          <span className="text-[10px] font-mono text-zinc-500 tracking-wider">
+          <span className="text-[9px] sm:text-[10px] font-mono text-zinc-500 tracking-wider">
             24-BIT LOSSLESS
           </span>
         )}

@@ -9,9 +9,26 @@ import {
   Search,
   Heart,
   Volume2,
+  BookOpen,
+  Atom,
+  Globe,
 } from "lucide-react";
 
-export default function Sidebar() {
+interface SidebarProps {
+  onMobileItemClick?: () => void;
+  className?: string;
+}
+
+const CELESTIAL_ITEMS = [
+  { id: "moon", name: "The Moon", meta: "384,400 KM • Sea of Tranquility" },
+  { id: "venus", name: "Venus", meta: "61,000,000 KM • Golden Clouds" },
+  { id: "jupiter", name: "Jupiter", meta: "628,700,000 KM • Great Red Spot" },
+  { id: "saturn", name: "Saturn", meta: "1,400,000,000 KM • Ice Rings" },
+  { id: "sun", name: "The Sun", meta: "149,600,000 KM • Solar Corona" },
+  { id: "deep-void", name: "Deep Cosmos", meta: "24,000,000,000 KM • Interstellar Void" },
+];
+
+export default function Sidebar({ onMobileItemClick, className = "" }: SidebarProps) {
   const {
     songs,
     currentSong,
@@ -20,6 +37,8 @@ export default function Sidebar() {
     setIsPublishModalOpen,
     activeNav,
     setActiveNav,
+    activeImaginationId,
+    setActiveImaginationId,
   } = usePlayer();
 
   const [libraryFilter, setLibraryFilter] = useState<string>("All");
@@ -27,24 +46,72 @@ export default function Sidebar() {
 
   const likedCount = songs.filter((s) => s.is_liked).length;
 
+  const handleSelectJourney = (id: string) => {
+    setActiveImaginationId(id);
+    setActiveNav("home");
+    if (onMobileItemClick) onMobileItemClick();
+  };
+
+  const handleSelectSong = (song: (typeof songs)[0]) => {
+    playSong(song);
+    if (onMobileItemClick) onMobileItemClick();
+  };
+
+  const handleSelectLiked = () => {
+    setActiveNav("liked");
+    if (onMobileItemClick) onMobileItemClick();
+  };
+
+  const filterLower = librarySearch.trim().toLowerCase();
+
+  const matchesSearch = (text: string) => {
+    if (!filterLower) return true;
+    return text.toLowerCase().includes(filterLower);
+  };
+
+  const showPhilosophy =
+    (libraryFilter === "All" || libraryFilter === "Philosophy") &&
+    (matchesSearch("Kant & Nietzsche") ||
+      matchesSearch("Immanuel Kant") ||
+      matchesSearch("Friedrich Nietzsche") ||
+      matchesSearch("Critique of Pure Reason") ||
+      matchesSearch("Zarathustra") ||
+      matchesSearch("Philosophy"));
+
+  const showScience =
+    (libraryFilter === "All" || libraryFilter === "Science") &&
+    (matchesSearch("Einstein & Sagan") ||
+      matchesSearch("Albert Einstein") ||
+      matchesSearch("Carl Sagan") ||
+      matchesSearch("Cosmos") ||
+      matchesSearch("Pale Blue Dot") ||
+      matchesSearch("Science"));
+
+  const filteredCelestial = CELESTIAL_ITEMS.filter((item) => {
+    if (libraryFilter !== "All" && libraryFilter !== "Celestial") return false;
+    return matchesSearch(item.name) || matchesSearch(item.meta) || matchesSearch("Celestial");
+  });
+
   const filteredSongs = songs.filter((s) => {
     if (libraryFilter === "Liked" && !s.is_liked) return false;
-    if (librarySearch.trim()) {
-      return (
-        s.title.toLowerCase().includes(librarySearch.toLowerCase()) ||
-        s.artist.toLowerCase().includes(librarySearch.toLowerCase())
-      );
+    if (libraryFilter === "Celestial" || libraryFilter === "Philosophy" || libraryFilter === "Science") {
+      return false;
     }
-    return true;
+    return matchesSearch(s.title) || matchesSearch(s.artist) || matchesSearch(s.genre || "");
   });
 
   return (
-    <aside className="w-[300px] lg:w-[320px] flex-shrink-0 bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl">
+    <aside
+      className={`bg-[#121212] rounded-lg flex flex-col h-full overflow-hidden select-none border border-zinc-900/60 shadow-xl ${className}`}
+    >
       {/* Header: Your Library (Authentic Spotify Desktop) */}
       <div className="p-4 pb-2">
         <div className="flex items-center justify-between text-[#b3b3b3]">
           <button
-            onClick={() => setActiveNav("home")}
+            onClick={() => {
+              setActiveNav("home");
+              if (onMobileItemClick) onMobileItemClick();
+            }}
             className="flex items-center gap-3 hover:text-white transition group"
           >
             <Library className="w-6 h-6 stroke-[2.2]" />
@@ -62,7 +129,10 @@ export default function Sidebar() {
               <Plus className="w-5 h-5" />
             </button>
             <button
-              onClick={() => setActiveNav("home")}
+              onClick={() => {
+                setActiveNav("home");
+                if (onMobileItemClick) onMobileItemClick();
+              }}
               className="p-1.5 rounded-full hover:bg-[#242424] hover:text-white transition"
               title="Enlarge library"
             >
@@ -79,7 +149,7 @@ export default function Sidebar() {
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar">
-          {["All", "Playlists", "Songs", "Liked"].map((pill) => (
+          {["All", "Celestial", "Philosophy", "Science", "Liked"].map((pill) => (
             <button
               key={pill}
               onClick={() => {
@@ -113,12 +183,123 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Playlist / Songs List (Solid Spotify Feel) */}
+      {/* Journeys, Playlists & Songs List (Synced with Cosmos Showcase) */}
       <div className="flex-1 overflow-y-auto px-2 space-y-0.5 pb-4">
-        {/* Liked Songs Special Row */}
-        {libraryFilter !== "Songs" && (
+        {/* 1. Philosophy: Kant & Nietzsche */}
+        {showPhilosophy && (
           <div
-            onClick={() => setActiveNav("liked")}
+            onClick={() => handleSelectJourney("philosophy")}
+            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+              activeImaginationId === "philosophy"
+                ? "bg-[#262626] border-l-2 border-white pl-2"
+                : "hover:bg-[#1a1a1a]"
+            }`}
+          >
+            <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+              <BookOpen className="w-5 h-5 text-zinc-200 group-hover:text-white" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <p
+                  className={`text-sm font-semibold truncate ${
+                    activeImaginationId === "philosophy" ? "text-white font-bold" : "text-zinc-100"
+                  }`}
+                >
+                  Kant & Nietzsche
+                </p>
+                {activeImaginationId === "philosophy" && (
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-bold">
+                    ACTIVE
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
+                <span>Philosophy</span>
+                <span>•</span>
+                <span>Critique & Zarathustra</span>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 2. Science: Einstein & Sagan */}
+        {showScience && (
+          <div
+            onClick={() => handleSelectJourney("science")}
+            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+              activeImaginationId === "science"
+                ? "bg-[#262626] border-l-2 border-white pl-2"
+                : "hover:bg-[#1a1a1a]"
+            }`}
+          >
+            <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+              <Atom className="w-5 h-5 text-cyan-300 group-hover:text-cyan-200" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <p
+                  className={`text-sm font-semibold truncate ${
+                    activeImaginationId === "science" ? "text-white font-bold" : "text-zinc-100"
+                  }`}
+                >
+                  Einstein & Sagan
+                </p>
+                {activeImaginationId === "science" && (
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-bold">
+                    ACTIVE
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
+                <span>Science</span>
+                <span>•</span>
+                <span>Spacetime & Star-Stuff</span>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 3. Celestial Horizons (Moon, Venus, Jupiter, Saturn, Sun, Deep Cosmos) */}
+        {filteredCelestial.map((dest) => {
+          const isDestActive = activeImaginationId === dest.id;
+          return (
+            <div
+              key={dest.id}
+              onClick={() => handleSelectJourney(dest.id)}
+              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+                isDestActive
+                  ? "bg-[#262626] border-l-2 border-cyan-400 pl-2"
+                  : "hover:bg-[#1a1a1a]"
+              }`}
+            >
+              <div className="w-12 h-12 rounded bg-gradient-to-br from-zinc-900 to-black border border-white/10 flex items-center justify-center flex-shrink-0 shadow">
+                <Globe className="w-5 h-5 text-zinc-400 group-hover:text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <p
+                    className={`text-sm font-semibold truncate ${
+                      isDestActive ? "text-white font-bold" : "text-zinc-100"
+                    }`}
+                  >
+                    {dest.name}
+                  </p>
+                  {isDestActive && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-400 text-black font-bold">
+                      ORBIT
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-[#b3b3b3] truncate">{dest.meta}</p>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* 4. Liked Songs Row */}
+        {(libraryFilter === "All" || libraryFilter === "Liked") && !filterLower && (
+          <div
+            onClick={handleSelectLiked}
             className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition ${
               activeNav === "liked" ? "bg-[#242424]" : "hover:bg-[#1a1a1a]"
             }`}
@@ -139,51 +320,50 @@ export default function Sidebar() {
           </div>
         )}
 
-        {/* Songs List: Real Album Art & Soundtracks */}
-        {libraryFilter !== "Playlists" &&
-          filteredSongs.map((song) => {
-            const isCurrentActive = currentSong?.id === song.id;
-            return (
-              <div
-                key={song.id}
-                onClick={() => playSong(song)}
-                className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
-                  isCurrentActive ? "bg-[#242424]" : "hover:bg-[#1a1a1a]"
-                }`}
-              >
-                <div className="relative w-12 h-12 rounded overflow-hidden bg-black flex-shrink-0 shadow">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={song.cover_url}
-                    alt={song.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {isCurrentActive && isPlaying && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                      <Volume2 className="w-4 h-4 text-white animate-pulse" />
-                    </div>
-                  )}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <p
-                    className={`text-sm font-semibold truncate ${
-                      isCurrentActive
-                        ? "text-white font-bold"
-                        : "text-zinc-100 group-hover:text-white"
-                    }`}
-                  >
-                    {song.title}
-                  </p>
-                  <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
-                    <span>Song</span>
-                    <span>•</span>
-                    <span>{song.artist}</span>
-                  </p>
-                </div>
+        {/* 5. Songs List */}
+        {filteredSongs.map((song) => {
+          const isCurrentActive = currentSong?.id === song.id;
+          return (
+            <div
+              key={song.id}
+              onClick={() => handleSelectSong(song)}
+              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition group ${
+                isCurrentActive ? "bg-[#242424]" : "hover:bg-[#1a1a1a]"
+              }`}
+            >
+              <div className="relative w-12 h-12 rounded overflow-hidden bg-black flex-shrink-0 shadow">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={song.cover_url}
+                  alt={song.title}
+                  className="w-full h-full object-cover"
+                />
+                {isCurrentActive && isPlaying && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <Volume2 className="w-4 h-4 text-white animate-pulse" />
+                  </div>
+                )}
               </div>
-            );
-          })}
+
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`text-sm font-semibold truncate ${
+                    isCurrentActive
+                      ? "text-white font-bold"
+                      : "text-zinc-100 group-hover:text-white"
+                  }`}
+                >
+                  {song.title}
+                </p>
+                <p className="text-xs text-[#b3b3b3] truncate flex items-center gap-1">
+                  <span>Song</span>
+                  <span>•</span>
+                  <span>{song.artist}</span>
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </aside>
   );

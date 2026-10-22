@@ -128,7 +128,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [imaginationPrompt, setImaginationPrompt] = useState<string>(
     "Imagine you are flying above the Earth... Take a breath, why so serious?"
   );
-  const [activeImaginationId, setActiveImaginationId] = useState<string>("flight");
+  const [activeImaginationId, setActiveImaginationId] = useState<string>("meditation");
   const [isBreathingGuideActive, setIsBreathingGuideActive] = useState<boolean>(true);
   const [spatialSoundMode, setSpatialSoundModeState] = useState<"hrtf" | "binaural" | "stereo">("hrtf");
 
