@@ -25,25 +25,20 @@ export default function Navbar() {
 
   return (
     <header className="h-14 sm:h-16 px-3 sm:px-5 flex items-center justify-between select-none bg-black border-b border-zinc-900/60 flex-shrink-0 z-30">
-      {/* BRAND LOGO: Music Sign with Dot */}
+      {/* BRAND LOGO: Clean Monochrome Music Sign */}
       <div
         onClick={() => {
           setSearchQuery("");
           setActiveNav("home");
         }}
-        className="flex items-center gap-2.5 cursor-pointer group"
+        className="flex items-center gap-2.5 cursor-pointer group select-none"
       >
-        <div className="relative w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0">
-          <Music className="w-4 h-4 text-black fill-black stroke-[2.2] translate-x-[0.5px]" />
-          {/* Dot in the logo */}
-          <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-black ring-1.5 ring-white" />
+        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-all duration-200 flex-shrink-0">
+          <Music className="w-4 h-4 text-black fill-black stroke-[2]" />
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs sm:text-sm font-black tracking-wider text-white">
-            HELLO MUSIC
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
-        </div>
+        <span className="text-sm font-bold tracking-tight text-white group-hover:text-zinc-200 transition">
+          HELLO MUSIC
+        </span>
       </div>
 
       {/* DESKTOP CENTER: Spotify Desktop Search Pill + Home Button */}

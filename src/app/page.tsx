@@ -29,7 +29,6 @@ function MusicAppContent() {
     setActiveNav,
     searchQuery,
     setSearchQuery,
-    selectedGenre,
     setSelectedGenre,
     setIsPublishModalOpen,
     isLoadingSongs,
@@ -38,7 +37,6 @@ function MusicAppContent() {
 
   const [mobileTab, setMobileTab] = useState<"cosmos" | "search" | "library">("cosmos");
 
-  const categoryPills = ["All", "Escape to Cosmos", "Original"];
   const flyAwaySong = songs[0];
 
   return (
@@ -136,7 +134,7 @@ function MusicAppContent() {
                   >
                     <Music className="w-5 h-5 text-zinc-200" />
                     <div>
-                      <p className="text-sm font-bold text-white">Instrumental</p>
+                      <p className="text-sm font-bold text-white">Soundscapes</p>
                       <p className="text-[10px] text-zinc-400">Cinematic & Deep</p>
                     </div>
                   </button>
@@ -197,32 +195,6 @@ function MusicAppContent() {
             mobileTab === "cosmos" ? "flex" : "hidden md:flex"
           } flex-1 flex-col bg-[#121212] rounded-lg overflow-y-auto overflow-x-hidden p-3 sm:p-6 pb-36 md:pb-8 relative border border-zinc-900/60 shadow-xl touch-scroll`}
         >
-          {/* Category Chips Bar (100% opaque bg-[#121212] so scrolled items never peek through) */}
-          <div className="flex items-center gap-2 mb-3 sm:mb-5 sticky top-0 pt-2 pb-2.5 bg-[#121212] z-20 overflow-x-auto no-scrollbar">
-            {categoryPills.map((pill) => {
-              const isActive =
-                (pill === "All" && (selectedGenre === "All" || !selectedGenre)) ||
-                (pill === "Escape to Cosmos" && selectedGenre.toLowerCase().includes("cosmos")) ||
-                (pill === "Original" && selectedGenre.toLowerCase().includes("original"));
-              return (
-                <button
-                  type="button"
-                  key={pill}
-                  onClick={() => {
-                    setActiveNav("home");
-                    setSelectedGenre(pill);
-                  }}
-                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 active:scale-95 ${
-                    isActive
-                      ? "bg-white text-black font-bold shadow-md ring-1 ring-white"
-                      : "bg-[#242424] text-zinc-300 hover:text-white hover:bg-[#2e2e2e] border border-white/5"
-                  }`}
-                >
-                  {pill}
-                </button>
-              );
-            })}
-          </div>
 
           {/* Quick-Picks Row (Desktop/Tablet clean secondary bar) */}
           {activeNav === "home" && !searchQuery.trim() && (

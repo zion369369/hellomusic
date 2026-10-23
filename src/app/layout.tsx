@@ -16,12 +16,12 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hellomusic-alpha.vercel.app"),
   title: "Hello Music — Web Player",
-  description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original instrumental music.",
+  description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
   keywords: [
     "Hello Music",
     "ZION",
     "Fly away",
-    "Instrumental Music",
+    "Original Soundscapes",
     "Original Track",
     "Web Player",
     "Lossless Audio",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   authors: [{ name: "ZION" }],
   openGraph: {
     title: "Hello Music — Web Player",
-    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original instrumental music.",
+    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
     url: "https://hellomusic-alpha.vercel.app",
     siteName: "Hello Music",
     locale: "en_US",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Hello Music — Web Player",
-    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original instrumental music.",
+    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
     creator: "@zion",
   },
   icons: {

@@ -234,7 +234,7 @@ export default function CosmosAestheticPanel() {
           </div>
 
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
-            ZION creates immersive instrumental soundscapes engineered with analog synthesis, spatial depth, and high-fidelity production. Stream the original master release of Fly away.
+            ZION creates immersive soundscapes engineered with analog synthesis, spatial depth, and high-fidelity production. Stream the original master release of Fly away.
           </p>
         </div>
       </div>

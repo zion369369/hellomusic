@@ -72,14 +72,6 @@ export default async function Image() {
             >
               HELLO MUSIC
             </span>
-            <div
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "9999px",
-                backgroundColor: "white",
-              }}
-            />
           </div>
 
           <div
@@ -154,11 +146,11 @@ export default async function Image() {
           }}
         >
           <div style={{ display: "flex", gap: "28px", color: "#a1a1aa", fontSize: "14px", fontFamily: "monospace" }}>
-            <span>30s Mindful Flight</span>
+            <span>Master Release</span>
             <span>•</span>
-            <span>Kant & Nietzsche</span>
+            <span>Lossless Studio Audio</span>
             <span>•</span>
-            <span>Einstein & Sagan</span>
+            <span>ZION</span>
           </div>
 
           <div
