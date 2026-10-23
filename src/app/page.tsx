@@ -19,10 +19,6 @@ import {
   Library,
   Search,
   X,
-  BookOpen,
-  Atom,
-  Globe,
-  Compass,
 } from "lucide-react";
 
 function MusicAppContent() {
@@ -37,7 +33,6 @@ function MusicAppContent() {
     setSelectedGenre,
     setIsPublishModalOpen,
     isLoadingSongs,
-    setActiveImaginationId,
     playSong,
   } = usePlayer();
 
@@ -128,66 +123,66 @@ function MusicAppContent() {
             ) : (
               <div className="space-y-4">
                 <h3 className="text-xs font-mono uppercase tracking-widest text-zinc-400">
-                  Explore Cosmos & Philosophy
+                  Explore Music
                 </h3>
                 <div className="grid grid-cols-2 gap-2.5">
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveImaginationId("philosophy");
+                      setSelectedGenre("All");
                       setMobileTab("cosmos");
                     }}
-                    className="p-4 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/10 text-left hover:border-white/30 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                    className="p-4 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/10 text-left hover:border-white/30 transition active:scale-[0.98] flex flex-col justify-between h-24 shadow-sm"
                   >
-                    <BookOpen className="w-5 h-5 text-zinc-200" />
+                    <Music className="w-5 h-5 text-zinc-200" />
                     <div>
-                      <p className="text-sm font-bold text-white">Philosophy</p>
-                      <p className="text-[10px] text-zinc-400">Kant & Nietzsche</p>
+                      <p className="text-sm font-bold text-white">Instrumental</p>
+                      <p className="text-[10px] text-zinc-400">Cinematic & Deep</p>
                     </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveImaginationId("science");
+                      setSelectedGenre("Original");
                       setMobileTab("cosmos");
                     }}
-                    className="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/40 to-zinc-950 border border-cyan-500/20 text-left hover:border-cyan-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                    className="p-4 rounded-xl bg-gradient-to-br from-emerald-950/60 to-zinc-950 border border-emerald-500/20 text-left hover:border-emerald-500/40 transition active:scale-[0.98] flex flex-col justify-between h-24 shadow-sm"
                   >
-                    <Atom className="w-5 h-5 text-cyan-300" />
+                    <Disc3 className="w-5 h-5 text-[#1ed760]" />
                     <div>
-                      <p className="text-sm font-bold text-white">Science</p>
-                      <p className="text-[10px] text-zinc-400">Einstein & Sagan</p>
+                      <p className="text-sm font-bold text-white">Original Masters</p>
+                      <p className="text-[10px] text-zinc-400">Lossless Studio</p>
                     </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveImaginationId("moon");
+                      setSelectedGenre("Escape to Cosmos");
                       setMobileTab("cosmos");
                     }}
-                    className="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/40 to-zinc-950 border border-indigo-500/20 text-left hover:border-indigo-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                    className="p-4 rounded-xl bg-gradient-to-br from-indigo-950/60 to-zinc-950 border border-indigo-500/20 text-left hover:border-indigo-500/40 transition active:scale-[0.98] flex flex-col justify-between h-24 shadow-sm"
                   >
-                    <Globe className="w-5 h-5 text-indigo-300" />
+                    <Disc3 className="w-5 h-5 text-indigo-300" />
                     <div>
-                      <p className="text-sm font-bold text-white">Celestial</p>
-                      <p className="text-[10px] text-zinc-400">Planets & Deep Void</p>
+                      <p className="text-sm font-bold text-white">Space & Ambient</p>
+                      <p className="text-[10px] text-zinc-400">Atmospheric Sound</p>
                     </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveImaginationId("meditation");
+                      setActiveNav("liked");
                       setMobileTab("cosmos");
                     }}
-                    className="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/40 to-zinc-950 border border-emerald-500/20 text-left hover:border-emerald-500/40 transition active:scale-[0.98] flex flex-col justify-between h-28 shadow-sm"
+                    className="p-4 rounded-xl bg-gradient-to-br from-purple-950/60 to-zinc-950 border border-purple-500/20 text-left hover:border-purple-500/40 transition active:scale-[0.98] flex flex-col justify-between h-24 shadow-sm"
                   >
-                    <Compass className="w-5 h-5 text-emerald-300" />
+                    <Heart className="w-5 h-5 text-purple-300" />
                     <div>
-                      <p className="text-sm font-bold text-white">30s Meditation</p>
-                      <p className="text-[10px] text-zinc-400">Calm Mind Flight</p>
+                      <p className="text-sm font-bold text-white">Liked Songs</p>
+                      <p className="text-[10px] text-zinc-400">Your Favorites</p>
                     </div>
                   </button>
                 </div>
@@ -216,9 +211,6 @@ function MusicAppContent() {
                   onClick={() => {
                     setActiveNav("home");
                     setSelectedGenre(pill);
-                    if (pill === "Escape to Cosmos") {
-                      setActiveImaginationId("meditation");
-                    }
                   }}
                   className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 active:scale-95 ${
                     isActive
@@ -322,7 +314,7 @@ function MusicAppContent() {
           }`}
         >
           <HomeIcon className="w-5 h-5 stroke-[2.2]" />
-          <span className="text-[10px] tracking-tight">Cosmos</span>
+          <span className="text-[10px] tracking-tight">Home</span>
         </button>
 
         <button

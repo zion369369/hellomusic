@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Hello Music — Music Beyond Imagination";
+export const alt = "Hello Music — Web Player";
 export const size = {
   width: 1200,
   height: 630,
@@ -72,6 +72,14 @@ export default async function Image() {
             >
               HELLO MUSIC
             </span>
+            <div
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "9999px",
+                backgroundColor: "white",
+              }}
+            />
           </div>
 
           <div
@@ -85,12 +93,12 @@ export default async function Image() {
               border: "1px solid rgba(255, 255, 255, 0.2)",
               fontSize: "13px",
               fontFamily: "monospace",
-              color: "#22d3ee",
+              color: "#ffffff",
               letterSpacing: "1px",
               textTransform: "uppercase",
             }}
           >
-            ● Beyond Imagination
+            ● Studio Master
           </div>
         </div>
 

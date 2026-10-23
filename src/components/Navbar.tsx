@@ -25,7 +25,7 @@ export default function Navbar() {
 
   return (
     <header className="h-14 sm:h-16 px-3 sm:px-5 flex items-center justify-between select-none bg-black border-b border-zinc-900/60 flex-shrink-0 z-30">
-      {/* BRAND LOGO: Black and White Music Sign */}
+      {/* BRAND LOGO: Music Sign with Dot */}
       <div
         onClick={() => {
           setSearchQuery("");
@@ -33,16 +33,16 @@ export default function Navbar() {
         }}
         className="flex items-center gap-2.5 cursor-pointer group"
       >
-        <div className="w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0">
+        <div className="relative w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0">
           <Music className="w-4 h-4 text-black fill-black stroke-[2.2] translate-x-[0.5px]" />
+          {/* Dot in the logo */}
+          <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-black ring-1.5 ring-white" />
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-xs sm:text-sm font-black tracking-wider text-white">
             HELLO MUSIC
           </span>
-          <span className="hidden lg:inline text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-cyan-300 border border-white/15 uppercase">
-            Beyond Imagination
-          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function Navbar() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search songs, artists, or cosmic journeys..."
+            placeholder="What do you want to play?"
             className="w-full bg-transparent text-white text-xs sm:text-sm placeholder-[#71717a] font-normal border-none outline-none"
           />
           {searchQuery && (
