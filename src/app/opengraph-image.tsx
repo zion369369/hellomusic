@@ -41,7 +41,8 @@ export default async function Image() {
                 width: "44px",
                 height: "44px",
                 borderRadius: "9999px",
-                backgroundColor: "white",
+                backgroundColor: "rgba(255, 255, 255, 0.12)",
+                border: "1px solid rgba(255, 255, 255, 0.25)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -51,15 +52,9 @@ export default async function Image() {
                 width="22"
                 height="22"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="black"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                fill="white"
               >
-                <path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19" />
-                <circle cx="18" cy="16" r="3" fill="black" />
-                <circle cx="6" cy="19" r="3" fill="black" />
+                <path d="M21 3.25v12.25a3.5 3.5 0 1 1-2.5-3.35V7.15L9.5 9.15v8.35a3.5 3.5 0 1 1-2.5-3.35V5.5a1 1 0 0 1 .8-.98l12-2.5a1 1 0 0 1 1.2.98z" />
               </svg>
             </div>
             <span

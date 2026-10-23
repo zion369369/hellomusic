@@ -33,7 +33,7 @@ export default function LiveCosmicFlightModal() {
     duration,
   } = usePlayer();
 
-  const [phase, setPhase] = useState<"breathing" | "flight">("breathing");
+  const [phase, setPhase] = useState<"breathing" | "flight">("flight");
   const [breathingStep, setBreathingStep] = useState<number>(0);
   const [spatialType, setSpatialType] = useState<"hrtf" | "binaural" | "stereo">("hrtf");
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -43,31 +43,31 @@ export default function LiveCosmicFlightModal() {
 
   const quotes = [
     {
-      intro: "Want to fly?",
-      main: "It always starts with imagination.",
-      sub: "And once you've learned to fly in your mind, even the universe is no longer the limit. 🪽",
+      intro: "Philosophical Sublime (Kant)",
+      main: "“The starry heavens above me, and the moral law within me.”",
+      sub: "Lifting consciousness into infinite celestial flight.",
     },
     {
-      intro: "Philosophical Resonance",
-      main: "“The light dove, cleaving in the air”",
-      sub: "Finding effortless lift above the noise.",
+      intro: "Celestial Harmonia (Aristotle)",
+      main: "“The celestial spheres rotate in eternal, effortless harmony.”",
+      sub: "Actualizing the spirit in frictionless cosmic motion.",
     },
     {
-      intro: "Perspective",
-      main: "“The higher we soar, the smaller we appear to those who cannot fly.”",
-      sub: "Transcend earthly boundaries.",
+      intro: "Overcoming Gravity (Nietzsche)",
+      main: "“He who is light shall soar above the spirit of gravity.”",
+      sub: "Fly beyond all earthly horizons.",
     },
     {
-      intro: "Cosmic Awakening",
-      main: "I asked the universe why we cannot fly? she whispered,",
-      sub: "“the cosmos is soaring with you.”",
+      intro: "Flight Beyond Imagination",
+      main: "Across the sky, imagine you are a cloud, the brightest star.",
+      sub: "Now imagine something none can imagine except you.",
     },
   ];
 
   // Initialize Spatial Audio & Autoplay when opening
   useEffect(() => {
     if (!isFlightModalOpen) {
-      setPhase("breathing");
+      setPhase("flight");
       setBreathingStep(0);
       return;
     }

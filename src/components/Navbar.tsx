@@ -9,7 +9,6 @@ import {
   X,
   User,
   LogOut,
-  Music,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -25,7 +24,7 @@ export default function Navbar() {
 
   return (
     <header className="h-14 sm:h-16 px-3 sm:px-5 flex items-center justify-between select-none bg-black border-b border-zinc-900/60 flex-shrink-0 z-30">
-      {/* BRAND LOGO: Clean Monochrome Music Sign */}
+      {/* BRAND LOGO: Polished Real Music Symbol of Brilliant White */}
       <div
         onClick={() => {
           setSearchQuery("");
@@ -33,8 +32,15 @@ export default function Navbar() {
         }}
         className="flex items-center gap-2.5 cursor-pointer group select-none"
       >
-        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-all duration-200 flex-shrink-0">
-          <Music className="w-4 h-4 text-black fill-black stroke-[2]" />
+        <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/15 border border-white/20 group-hover:border-white/40 flex items-center justify-center transition-all duration-200 shadow-sm flex-shrink-0 group-hover:scale-105">
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-4.5 h-4.5 text-white"
+            aria-hidden="true"
+          >
+            <path d="M21 3.25v12.25a3.5 3.5 0 1 1-2.5-3.35V7.15L9.5 9.15v8.35a3.5 3.5 0 1 1-2.5-3.35V5.5a1 1 0 0 1 .8-.98l12-2.5a1 1 0 0 1 1.2.98z" />
+          </svg>
         </div>
         <span className="text-sm font-bold tracking-tight text-white group-hover:text-zinc-200 transition">
           HELLO MUSIC

@@ -11,6 +11,7 @@ import PlayerBottomBar from "@/components/PlayerBottomBar";
 import PublishSongModal from "@/components/PublishSongModal";
 import SupabaseSetupModal from "@/components/SupabaseSetupModal";
 import AuthModal from "@/components/AuthModal";
+import LiveCosmicFlightModal from "@/components/LiveCosmicFlightModal";
 import {
   Music,
   Disc3,
@@ -320,6 +321,7 @@ function MusicAppContent() {
       <PublishSongModal />
       <SupabaseSetupModal />
       <AuthModal />
+      <LiveCosmicFlightModal />
     </div>
   );
 }

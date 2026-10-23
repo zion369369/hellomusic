@@ -15,6 +15,7 @@ import {
   Volume1,
   Heart,
   Eye,
+  RotateCcw,
 } from "lucide-react";
 
 interface PlayerBottomBarProps {
@@ -59,15 +60,41 @@ export default function PlayerBottomBar({ onOpenCosmos }: PlayerBottomBarProps) 
     if (onOpenCosmos) onOpenCosmos();
   };
 
+  const handleMobileProgressSeek = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    e.stopPropagation();
+    const target = e.currentTarget;
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const rect = target.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const clickX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const newPercent = clickX / rect.width;
+    seek(newPercent * (duration || 224));
+  };
+
   return (
     <>
       {/* 1. MOBILE NATIVE MINI-PLAYER (< md screens) */}
       <div className="md:hidden flex flex-col bg-[#161618] border-t border-zinc-800/80 z-30 flex-shrink-0 select-none">
-        {/* Sleek top progress indicator */}
-        <div className="w-full h-[2px] bg-zinc-800">
+        {/* Interactive touch/scrub progress bar with generous 24px touch target */}
+        <div
+          onClick={handleMobileProgressSeek}
+          onTouchStart={handleMobileProgressSeek}
+          onTouchMove={handleMobileProgressSeek}
+          className="w-full relative py-2 -my-2 cursor-pointer group touch-none"
+          title="Scrub track timeline"
+        >
+          <div className="w-full h-1 bg-zinc-800 relative overflow-hidden">
+            <div
+              className="h-full bg-[#1ed760] relative transition-all duration-75"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          {/* Subtle seek thumb */}
           <div
-            className="h-full bg-white transition-all duration-100 ease-linear"
-            style={{ width: `${progressPercent}%` }}
+            className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-md pointer-events-none transition-all duration-75"
+            style={{ left: `calc(${progressPercent}% - 5px)` }}
           />
         </div>
 
@@ -95,11 +122,29 @@ export default function PlayerBottomBar({ onOpenCosmos }: PlayerBottomBarProps) 
             </div>
           </div>
 
-          {/* Quick controls with 40px+ touch targets */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Quick controls with Rewind and Time */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {/* Rewind 10 seconds */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                seek(Math.max(0, currentTime - 10));
+              }}
+              className="text-[#b3b3b3] hover:text-white p-2 min-w-[36px] min-h-[36px] flex items-center justify-center transition active:scale-90"
+              title="Rewind 10s"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+
+            {/* Live timestamp */}
+            <span className="text-[10px] font-mono text-zinc-400 min-w-[28px] text-center select-none">
+              {formatTime(currentTime)}
+            </span>
+
+            {/* Like */}
             <button
               onClick={() => toggleLike(currentSong.id)}
-              className="text-[#b3b3b3] hover:text-white p-2.5 min-w-[40px] min-h-[40px] flex items-center justify-center transition active:scale-90"
+              className="text-[#b3b3b3] hover:text-white p-2 min-w-[36px] min-h-[36px] flex items-center justify-center transition active:scale-90"
               title={currentSong.is_liked ? "Unlike" : "Like"}
             >
               <Heart
@@ -109,6 +154,7 @@ export default function PlayerBottomBar({ onOpenCosmos }: PlayerBottomBarProps) 
               />
             </button>
 
+            {/* Play / Pause */}
             <button
               onClick={togglePlay}
               className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full bg-white text-black flex items-center justify-center shadow active:scale-90 transition-transform"
