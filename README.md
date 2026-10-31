@@ -1,95 +1,57 @@
-# 💽 HELLO MUSIC
+# DUS 80 MASTER — %80 Ortak Soru Havuzu & Sınav Simülatörü 🎓
 
-> **"A different world of music. Underrated songs only......"**
-
-A high-fidelity, full-stack music platform built to outshine Spotify with an uncompromising black & white obsidian branding, creator publishing studio, dynamic play/view tracking, and instant listening.
+Diş Hekimliğinde Uzmanlık Sınavı (DUS) hazırlığında en çok çıkan ve soru yakalama oranı en yüksek olan **610 spot soru**, 16 ÖSYM branşı, 120 soruluk deneme simülatörü ve aktif hatırlama kartları içeren web platformu.
 
 ---
 
-## ⚡ Maiden Release
+## 🎯 %80 Ortak Soru Stratejisi & Hedefi
+ÖSYM DUS sınavlarında temel anatomik yapılar, fizyopatoloji, klinik protokoller, ilaç antidotları ve mikrobiyolojik etkenler gibi çekirdek kavramlar sınav sorularının yaklaşık **%80'ini** oluşturmaktadır. 
 
-- **Title**: **Fly away**
-- **Artist**: **ZION**
-- **Genre**: **Underrated Remix**
-- **Audio Asset**: High-fidelity stereo audio (`/public/audio/fly-away-zion.mp3`)
-- **Cover Artwork**: Bespoke high-contrast monochrome vinyl art (`/public/covers/fly-away.svg`)
-
----
-
-## 🖤 Design System: Black & White Outshines Spotify
-
-Hello Music replaces Spotify's green/grey interface with an editorial, high-contrast monochrome aesthetic:
-- **Obsidian & Onyx Surfaces**: Deep `#09090b` and `#000000` glassmorphic backdrops.
-- **Pure White Accents**: `#ffffff` glowing controls, crisp typography, and high-impact hover states.
-- **Spotify-Grade Audio Player**:
-  - Global persistent bottom bar.
-  - Interactive smooth scrubbing timeline with live elapsed / remaining time.
-  - Live animated equalizer audio waveform bars.
-  - Shuffle, loop (repeat one / repeat all), volume slider, and instant mute toggle.
-- **Real-Time Metrics**:
-  - **View / Play Counter**: Automatically tracks listens after 3 seconds of continuous playback.
-  - **Like Counter**: Optimistic immediate toggle with persistent database and local sync.
-- **Creator Studio / Song Publishing**:
-  - Upload `.mp3`, `.wav`, `.aac`, `.m4a` files with live duration calculation and in-modal preview playback.
-  - Choose custom artwork or select from 4 Hello Music monochrome artwork presets.
-  - Celebratory confetti feedback and immediate insertion into the discovery feed.
+Bu platform:
+- Tüm **610 soruyu** (S1 - S610) eksiksiz olarak içerir.
+- Öğrencinin **%80 eşiğine (488 / 610 Soru)** ulaşmasını görsel ilerleme göstergesiyle takip eder.
+- S610'da yer alan **ÖSYM Altın Turlama Taktiği**ni (İlk 28 dk TBT / 62 dk KBT) pratik ettirir.
 
 ---
 
-## 🛠 Tech Stack
+## 📚 16 Branş & Soru Dağılımı
 
-- **Framework**: Next.js 14 (App Router, React 18, TypeScript)
-- **Styling**: Tailwind CSS, custom glassmorphism, monochrome tokens
-- **Icons**: Lucide React
-- **Audio Engine**: HTML5 Audio API & Web Audio visualizer hooks
-- **Database & Auth**: Supabase (PostgreSQL, Storage, RLS, Edge Functions)
-- **Deployment**: Vercel & GitHub ready
+### 🧬 Bölüm 1: Temel Bilimler Testi (TBT) — 210 Soru
+1. **Anatomi** (S1–S30) — ÖSYM: 6 Soru
+2. **Fizyoloji** (S31–S60) — ÖSYM: 6 Soru
+3. **Tıbbi Biyokimya** (S61–S90) — ÖSYM: 6 Soru
+4. **Tıbbi Mikrobiyoloji** (S91–S120) — ÖSYM: 6 Soru
+5. **Histoloji ve Embriyoloji** (S121–S140) — ÖSYM: 4 Soru
+6. **Tıbbi Patoloji** (S141–S165) — ÖSYM: 4 Soru
+7. **Tıbbi Farmakoloji** (S166–S190) — ÖSYM: 4 Soru
+8. **Tıbbi Biyoloji ve Genetik** (S191–S210) — ÖSYM: 4 Soru
+
+### 🦷 Bölüm 2: Klinik Bilimler Testi (KBT) — 400 Soru
+9. **Protetik Diş Tedavisi** (S211–S260) — ÖSYM: 10 Soru
+10. **Restoratif Diş Tedavisi** (S261–S310) — ÖSYM: 10 Soru
+11. **Ağız, Diş ve Çene Cerrahisi** (S311–S360) — ÖSYM: 10 Soru
+12. **Ağız, Diş ve Çene Radyolojisi** (S361–S410) — ÖSYM: 10 Soru
+13. **Periodontoloji** (S411–S460) — ÖSYM: 10 Soru
+14. **Ortodonti** (S461–S510) — ÖSYM: 10 Soru
+15. **Endodonti** (S511–S560) — ÖSYM: 10 Soru
+16. **Çocuk Diş Hekimliği / Pedodonti** (S561–S610) — ÖSYM: 10 Soru
 
 ---
 
-## 🚀 Quick Start
+## ⚡ 5 Etkileşimli Çalışma Modu
 
-### 1. Install Dependencies
+1. **Spot Kartları (Aktif Hatırlama - Flashcard)**: 3D kart çevirme, klavye kısayolları (Boşluk, 1, 2, Ok tuşları), sesli okuma desteği (Web Speech API).
+2. **4 Seçenekli Test Modu (Quiz)**: Her soru için branşa özel şıklar, anında doğru/yanlış geri bildirimi ve detaylı klinik açıklama.
+3. **Hızlı Turlama (Speed Drill - 42s Pacer)**: Soru başına 42 saniyelik sayaç ile refleks hızlandırma.
+4. **ÖSYM 120 Soru Deneme Simülatörü**: 40 TBT + 80 KBT dengeli soru seçimi, 150 dakika geri sayım, dijital optik form ve %80 net başarı raporu.
+5. **Soru Bankası & Arama (Table View)**: Anlık arama (keyword, branş, durum), yıldızlı sorular ve PDF/yazdırma desteği.
+
+---
+
+## 🚀 Çalıştırma
+
 ```bash
 npm install
-```
-
-### 2. Run the Development Server
-```bash
 npm run dev
+# Tarayıcıda http://localhost:3000 açın
 ```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 🗄 Full Stack: Supabase Integration
-
-Hello Music includes a resilient multi-layer storage architecture:
-1. **Immediate Zero-Config Mode**: Works immediately out of the box with offline persistence in `localStorage`, so you can test publishing songs, liking tracks, and tracking view counts without setting up credentials first.
-2. **Supabase Cloud Sync**:
-   - Create a project on [Supabase](https://supabase.com).
-   - Go to the **SQL Editor** in Supabase and run the script in `supabase/schema.sql`.
-   - Add your credentials to `.env.local`:
-     ```env
-     NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-     NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-     ```
-   - Alternatively, click the **"Supabase Config"** button in the sidebar inside the app to paste your credentials directly into the UI!
-
----
-
-## 🌐 Deploy to Vercel
-
-1. Push this repository to GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: initial Hello Music full-stack platform with Fly away by ZION"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/hellomusic.git
-   git push -u origin main
-   ```
-2. Import the repository in [Vercel](https://vercel.com).
-3. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel Environment Variables.
-4. Click **Deploy**!

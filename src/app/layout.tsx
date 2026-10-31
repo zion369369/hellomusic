@@ -14,51 +14,34 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hellomusic-alpha.vercel.app"),
-  title: "Hello Music — Web Player",
-  description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
+  title: "DUS 80 MASTER — %80 Ortak Soru Havuzu & Sınav Hazırlık Platformu",
+  description: "DUS için 610 yüksek verimli spot soru, 16 ÖSYM branşı, 120 soruluk deneme simülatörü, aktif hatırlama kartları ve %80 net yakalama hedefi.",
   keywords: [
-    "Hello Music",
-    "ZION",
-    "Fly away",
-    "Original Soundscapes",
-    "Original Track",
-    "Web Player",
-    "Lossless Audio",
+    "DUS",
+    "Diş Hekimliğinde Uzmanlık Sınavı",
+    "DUS Spot Bilgiler",
+    "DUS Soru Bankası",
+    "Temel Bilimler",
+    "Klinik Bilimler",
+    "ÖSYM DUS",
+    "Diş Hekimliği",
+    "DUS Hazırlık"
   ],
-  authors: [{ name: "ZION" }],
+  authors: [{ name: "DUS 80 Master" }],
   openGraph: {
-    title: "Hello Music — Web Player",
-    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
-    url: "https://hellomusic-alpha.vercel.app",
-    siteName: "Hello Music",
-    locale: "en_US",
+    title: "DUS 80 MASTER — %80 Ortak Soru Havuzu",
+    description: "DUS'ta en çok çıkan 610 spot soru ile %80 ortak başarı hedefi.",
+    locale: "tr_TR",
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hello Music — Web Player",
-    description: "Listen to ZION's original master release 'Fly away'. Stream lossless studio audio and original soundscapes.",
-    creator: "@zion",
-  },
-  icons: {
-    icon: "/covers/fly-away.svg",
-    apple: "/covers/fly-away.svg",
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Hello Music",
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  viewportFit: "cover",
-  themeColor: "#000000",
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#090d16",
 };
 
 export default function RootLayout({
@@ -67,9 +50,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full">
+    <html lang="tr" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-[#f4f4f5] selection:bg-white selection:text-black h-full overflow-hidden overscroll-none`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#090d16] text-[#f1f5f9] min-h-screen selection:bg-emerald-500 selection:text-white`}
       >
         {children}
       </body>

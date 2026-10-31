@@ -1,7 +1,7 @@
 {
-  "name": "hellomusic",
-  "version": "0.1.0",
-  "private": true,
+  "name": "dus-80-master",
+  "version": "1.0.0",
+  "description": "DUS 80 Master — %80 Ortak Soru Havuzu & Sınav Simülatörü",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

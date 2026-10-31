@@ -1,23 +1,56 @@
-export interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  genre?: string;
-  audio_url: string;
-  cover_url: string;
-  duration: number; // in seconds
-  views_count: number;
-  likes_count: number;
-  created_at: string;
-  is_liked?: boolean;
-  user_id?: string;
-  description?: string;
-  is_verified?: boolean;
+export interface DUSQuestion {
+  id: number;
+  code: string;
+  section: "TBT" | "KBT";
+  sectionTitle: string;
+  subjectId: string;
+  subject: string;
+  branchNumber: number;
+  osymWeight: string;
+  osymPercent: string;
+  question: string;
+  answer: string;
+  coreAnswer: string;
+  keywords: string[];
+  options: string[];
+  correctIndex: number;
 }
 
-export interface UserProfile {
+export interface DUSSubject {
   id: string;
-  email?: string;
-  username: string;
-  avatar_url?: string;
+  name: string;
+  start: number;
+  end: number;
+  count: number;
+  branchNum: number;
+  weight: string;
+  section: "TBT" | "KBT";
+  sectionTitle: string;
+  percent: string;
+  color: string;
+}
+
+export type StudyMode = "flashcard" | "quiz" | "rapid" | "exam" | "table";
+
+export type QuestionStatus = "all" | "mastered" | "review" | "bookmarked";
+
+export interface ExamAnswer {
+  questionId: number;
+  selectedOptionIndex: number | null; // null if empty
+  isCorrect: boolean;
+}
+
+export interface ExamSession {
+  startTime: number;
+  durationSeconds: number;
+  answers: Record<number, number | null>; // questionId -> selectedOptionIndex
+  isSubmitted: boolean;
+  score?: {
+    correct: number;
+    incorrect: number;
+    empty: number;
+    net: number;
+    percentage: number;
+    passed80: boolean;
+  };
 }
